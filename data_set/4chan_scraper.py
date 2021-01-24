@@ -6,6 +6,8 @@ from tinydb.middlewares import CachingMiddleware
 from tinydb.operations import add, delete
 from io import StringIO
 from html.parser import HTMLParser
+from time import time, sleep
+import re
 
 
 def get_IDs():
@@ -15,7 +17,7 @@ def get_IDs():
         return thread_IDs  
 
 def get_thread_Json(thread_ID):
-    thread_json = requests.get("https://a.4cdn.org/pol/thread/"+str(thread_ID)+".json")
+    thread_json = requests.get("https://a.4cdn.org/pol/thread/"+str(thread_ID)+".json").json()
     return preprocess_json(thread_json)
 
 def preprocess_json(thread_json):
@@ -25,8 +27,9 @@ def preprocess_json(thread_json):
             tmp_dict = {
                 "country": post["country_name"],
                 "posting_time": post["now"],
-                "comment": remove_html(post["com"])
+                "comment": clean_comment(post.get("com"))
             }
+            print(tmp_dict,flush=True)
             output_list.append(tmp_dict)
 
         return output_list
@@ -38,12 +41,21 @@ def preprocess_json(thread_json):
         "thread": thread_json["posts"][0]["no"],
         "initial_country": thread_json["posts"][0]["country_name"],
         "posting_time": thread_json["posts"][0]["now"],
-        "initial_comment": thread_json["posts"][0]["com"],
+        "initial_comment": clean_comment(thread_json["posts"][0].get("com")),
         "replies": handle_replies(thread_json["posts"][1:]) # give handle_replies() all the following posts after initial post
     }
 
-    #print(preprocessed_json)
+    print(preprocessed_json)
     return preprocessed_json
+
+def clean_comment(text):
+    if text:
+        cleaned_html = remove_html(text)
+        cleaned_numbers = ''.join([i for i in cleaned_html if not i.isdigit()])
+        cleaned_links = re.sub(r'^https?:\/\/.*[\r\n]*', '', cleaned_numbers, flags=re.MULTILINE)
+        return cleaned_links
+    else:
+        return ""
 
 class MLStripper(HTMLParser):
     def __init__(self):
@@ -66,22 +78,22 @@ def store_to_db(db, preprocessed_json):
     db.insert(preprocessed_json)
     # save json to tinydb
 
-
 def main():
-    db = TinyDB('db.json', storage=CachingMiddleware(JSONStorage))
+    db = TinyDB('4chan_pol_database.json', storage=CachingMiddleware(JSONStorage))
     thread_IDs = get_IDs()
 
-    for thread_ID in thread_IDs:
+    # repeat every second
+    for thread_ID in thread_IDs[:1]:
         preprocessed_thread = get_thread_Json(thread_ID)
+        #store_to_db(preprocessed_json)
+        sleep(10 - time() % 10)
 
-        store_to_db(preprocessed_json)
-
-
+        print(thread_ID,flush="True")
 
 
     # save json to tinydb
 
 
-preprocess_json("lala")
+main()
 
 
