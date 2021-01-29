@@ -39,9 +39,6 @@ def preprocess_json(thread_json):
                 continue
 
         return output_list
-    
-    #with open('304255810.json') as thread_IDs_file:
-    #    thread_json = json.load(thread_IDs_file)
 
     preprocessed_json = {
         "thread": thread_json["posts"][0].get("no"),
@@ -58,12 +55,12 @@ def store_to_db(db, preprocessed_json):
 
 def main():
     db = TinyDB('4chan_pol_database.json', storage=CachingMiddleware(JSONStorage))
-    initial_thread_IDs = get_IDs()
+    thread_IDs = get_IDs()
 
     last_element_previous_list = 305641075
 
-    save_counter = 0
-    for thread_ID in reversed(initial_thread_IDs):
+    thread_counter = 0
+    for thread_ID in reversed(thread_IDs):
         
         if thread_ID == last_element_previous_list:
             print("All new Posts have been scraped. Exiting...")
@@ -77,11 +74,10 @@ def main():
 
         store_to_db(db,preprocessed_thread)
 
-        if save_counter % 50 == 0 and save_counter > 0:
-            print(save_counter,flush=True)
+        if thread_counter % 50 == 0 and thread_counter > 0:
+            print(thread_counter,flush=True)
 
-
-        save_counter += 1
+        thread_counter += 1
         sleep(1.5 - time() % 1.5)
 
 
