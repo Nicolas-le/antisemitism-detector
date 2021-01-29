@@ -1,4 +1,4 @@
-import requests
+import requests as r
 import json
 from tinydb import TinyDB, Query
 from tinydb.storages import JSONStorage
@@ -15,19 +15,24 @@ def get_IDs():
         return thread_IDs  
 
 def get_thread_Json(thread_ID):
-    thread_json = requests.get("https://a.4cdn.org/pol/thread/"+str(thread_ID)+".json").json()
-    return preprocess_json(thread_json)
+    
+    thread = r.get("https://a.4cdn.org/pol/thread/"+str(thread_ID)+".json")
+
+    if not thread.status_code == 404:
+        return preprocess_json(thread.json()), thread_ID
+    else:
+        return False, thread_ID
 
 def preprocess_json(thread_json):
     def handle_replies(posts):
         output_list = []
         for post in posts:
             tmp_dict = {
-                "country": post["country_name"],
-                "posting_time": post["now"],
+                "country": post.get("country_name"),
+                "posting_time": post.get("now"),
                 "comment": data_cleaner.clean_comment(post.get("com"))
             }
-            
+
             if data_cleaner.check_appending(tmp_dict):
                 output_list.append(tmp_dict)
             else:
@@ -39,9 +44,9 @@ def preprocess_json(thread_json):
     #    thread_json = json.load(thread_IDs_file)
 
     preprocessed_json = {
-        "thread": thread_json["posts"][0]["no"],
-        "initial_country": thread_json["posts"][0]["country_name"],
-        "posting_time": thread_json["posts"][0]["now"],
+        "thread": thread_json["posts"][0].get("no"),
+        "initial_country": thread_json["posts"][0].get("country_name"),
+        "posting_time": thread_json["posts"][0].get("now"),
         "initial_comment": data_cleaner.clean_comment(thread_json["posts"][0].get("com")),
         "replies": handle_replies(thread_json["posts"][1:]) # give handle_replies() all the following posts after initial post
     }
@@ -53,21 +58,32 @@ def store_to_db(db, preprocessed_json):
 
 def main():
     db = TinyDB('4chan_pol_database.json', storage=CachingMiddleware(JSONStorage))
-    thread_IDs = get_IDs()
+    initial_thread_IDs = get_IDs()
+
+    last_element_previous_list = 305641075
 
     save_counter = 0
-    for thread_ID in thread_IDs[:5]:
-        preprocessed_thread = get_thread_Json(thread_ID)
+    for thread_ID in reversed(initial_thread_IDs):
+        
+        if thread_ID == last_element_previous_list:
+            print("All new Posts have been scraped. Exiting...")
+            break
+
+        preprocessed_thread, thread_ID = get_thread_Json(thread_ID)
+
+        if not preprocessed_thread:
+            print("Thread %d isn't available anymore" % thread_ID)
+            break
+
         store_to_db(db,preprocessed_thread)
 
-        thread_IDs.remove(thread_ID)
-        if save_counter % 500 == 0:
-            filename = "./archive_ids_saves/save_point_" + str(save_counter) + ".json"
-            with open(filename, 'w') as f:
-                json.dump(thread_IDs, f)       
+        if save_counter % 50 == 0 and save_counter > 0:
+            print(save_counter,flush=True)
 
+
+        save_counter += 1
         sleep(1.5 - time() % 1.5)
-        print(thread_ID,flush="True")
+
 
     db.close()
 
