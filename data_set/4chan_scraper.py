@@ -15,7 +15,18 @@ def get_IDs():
         thread_IDs = json.load(thread_IDs_file)
         return thread_IDs  
 
+<<<<<<< HEAD
 def get_thread_Json(thread_ID,tokenizer):
+=======
+def get_thread_Json(thread_ID):
+    
+    thread = r.get("https://a.4cdn.org/pol/thread/"+str(thread_ID)+".json")
+
+    if not thread.status_code == 404:
+        return preprocess_json(thread.json()), thread_ID
+    else:
+        return False, thread_ID
+>>>>>>> 156298e24602e34df6d27cb62599b59cd6eaefaa
 
     # handle connection error request exceptions
     try:
@@ -55,7 +66,11 @@ def preprocess_json(thread_json,tokenizer):
             tmp_dict = {
                 "country": post.get("country_name"),
                 "posting_time": post.get("now"),
+<<<<<<< HEAD
                 "comment": data_cleaner.clean_comment(post.get("com"),tokenizer)
+=======
+                "comment": data_cleaner.clean_comment(post.get("com"))
+>>>>>>> 156298e24602e34df6d27cb62599b59cd6eaefaa
             }
 
             if data_cleaner.check_appending(tmp_dict):
@@ -69,8 +84,13 @@ def preprocess_json(thread_json,tokenizer):
         "thread": thread_json["posts"][0].get("no"),
         "initial_country": thread_json["posts"][0].get("country_name"),
         "posting_time": thread_json["posts"][0].get("now"),
+<<<<<<< HEAD
         "initial_comment": data_cleaner.clean_comment(thread_json["posts"][0].get("com"),tokenizer),
         "replies": handle_replies(thread_json["posts"][1:],tokenizer) # give handle_replies() all the following posts after initial post
+=======
+        "initial_comment": data_cleaner.clean_comment(thread_json["posts"][0].get("com")),
+        "replies": handle_replies(thread_json["posts"][1:]) # give handle_replies() all the following posts after initial post
+>>>>>>> 156298e24602e34df6d27cb62599b59cd6eaefaa
     }
 
     return preprocessed_json
@@ -82,6 +102,7 @@ def main():
     db = TinyDB('4chan_pol_database.json', storage=CachingMiddleware(JSONStorage))
     thread_IDs = get_IDs()
 
+<<<<<<< HEAD
     last_element_previous_list = 321155785
 
     thread_counter = 0
@@ -89,12 +110,18 @@ def main():
 
     tokenizer = spacy.load("en_core_web_sm")
 
+=======
+    last_element_previous_list = 305641075
+
+    thread_counter = 0
+>>>>>>> 156298e24602e34df6d27cb62599b59cd6eaefaa
     for thread_ID in reversed(thread_IDs):
         
         if thread_ID == last_element_previous_list:
             print("All new Posts have been scraped. Exiting...")
             break
 
+<<<<<<< HEAD
         preprocessed_thread = get_thread_Json(thread_ID,tokenizer)
 
         if not preprocessed_thread:
@@ -109,10 +136,25 @@ def main():
         store_to_db(db,preprocessed_thread)
 
         if thread_counter % 30 == 0 and thread_counter > 0:
+=======
+        preprocessed_thread, thread_ID = get_thread_Json(thread_ID)
+
+        if not preprocessed_thread:
+            print("Thread %d isn't available anymore" % thread_ID)
+            break
+
+        store_to_db(db,preprocessed_thread)
+
+        if thread_counter % 50 == 0 and thread_counter > 0:
+>>>>>>> 156298e24602e34df6d27cb62599b59cd6eaefaa
             print(thread_counter,flush=True)
 
         thread_counter += 1
         sleep(1.5 - time() % 1.5)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 156298e24602e34df6d27cb62599b59cd6eaefaa
 
     db.close()
 
