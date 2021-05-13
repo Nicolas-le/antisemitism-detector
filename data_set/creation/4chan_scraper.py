@@ -15,7 +15,7 @@ def get_IDs():
         thread_IDs = json.load(thread_IDs_file)
         return thread_IDs  
 
-#def get_thread_Json(thread_ID,tokenizer):
+def get_thread_Json(thread_ID,tokenizer):
 
     # handle connection error request exceptions
     try:
@@ -79,7 +79,7 @@ def store_to_db(db, preprocessed_json):
     db.insert(preprocessed_json)
 
 def main():
-    db = TinyDB('4chan_pol_database.json', storage=CachingMiddleware(JSONStorage))
+    db = TinyDB('../4chan_pol_database.json', storage=CachingMiddleware(JSONStorage))
     thread_IDs = get_IDs()
 
     last_element_previous_list = 321155785
