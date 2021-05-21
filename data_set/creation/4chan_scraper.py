@@ -82,7 +82,7 @@ def main():
     db = TinyDB('../4chan_pol_database.json', storage=CachingMiddleware(JSONStorage))
     thread_IDs = get_IDs()
 
-    last_element_previous_list = 321155785
+    last_element_previous_list = 321324355
 
     thread_counter = 0
     first_fail = True
