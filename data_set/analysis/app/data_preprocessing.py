@@ -1,9 +1,9 @@
 from db_retrieve import DBRetrieval
 from empath import Empath
 from collections import defaultdict
-import csv
+import spacy
 
-def get_info_per_date(date,empath_lex):
+def get_info_per_date(date,empath_lex,spacy_en_core):
     retrieval = DBRetrieval()
     posts_of_date = retrieval.get_post_per_day(date)
 
@@ -11,7 +11,7 @@ def get_info_per_date(date,empath_lex):
         "date": date,
         "topic_distr": topic_signal_mod(posts_of_date,empath_lex),
         "keyword_distr": get_keyword_distr(posts_of_date),
-        "countings": get_countings(posts_of_date)
+        "countings": get_countings(posts_of_date,spacy_en_core)
     }
 
     return date_info
@@ -95,7 +95,7 @@ def get_keyword_distr(posts_of_date):
 
     return keyword_distribution
 
-def get_countings(posts_of_date):
+def get_countings(posts_of_date, sp):
 
     countings = {
         "thread_general": {
@@ -105,17 +105,31 @@ def get_countings(posts_of_date):
             "word_count_without_stopwords": 0,
         },
         "special_threads": {
-            "long": 0, #id
-            "high_keyword_count": 0 #id
+            "traffic": [], #id
         }
     }
+    all_words = []
+
     countings["thread_general"]["count"] = len(posts_of_date)
 
     for thread in posts_of_date:
         countings["thread_general"]["replies"] += len(thread["replies"])
+        all_words += thread["initial_comment"]
+        for reply in thread["replies"]:
+            all_words += reply
+
+        if len(thread["replies"]) > 10:
+            countings["special_threads"]["traffic"].append((thread["thread"],len(thread["replies"])))
+
+    countings["thread_general"]["word_count_total"] = len(all_words)
+    countings["thread_general"]["word_count_without_stopwords"] = len(remove_stopwords(sp,all_words))
 
     return countings
 
+def remove_stopwords(sp, words):
+    all_stopwords = sp.Defaults.stop_words
+    tokens_without_sw = [word for word in words if not word in all_stopwords]
+    return tokens_without_sw
 
 def get_thread(id):
     """
@@ -127,10 +141,12 @@ def get_thread(id):
     return False
 
 date = '05/12/21(Wed)05'
-retrieval = DBRetrieval()
-posts_of_date = retrieval.get_post_per_day(date)
-coutings = get_countings(posts_of_date)
-print(coutings)
+
+empath_lex = Empath()
+spacy_en_core = spacy.load('en_core_web_sm')
+
+date_info = get_info_per_date(date, empath_lex, spacy_en_core)
+print(date_info)
 
 #
 #print(get_info_per_date(date,empath_lex))
