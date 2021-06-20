@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title>Flask Parent Template</title>
+    <link rel="stylesheet" href="static/stylesheet.css">
+</head>
+<body>
+<header>
+
+    <nav class="menu">
+        <ul class="menu__list">
+            <li class="menu__group"><a href="{{ url_for('home') }}" class="menu__link">Home</a></li>
+        </ul>
+    </nav>
+    </div>
+    </div>
+</header>
+
+{% block content %}
+{% endblock %}
+
+</body>
+</html>
