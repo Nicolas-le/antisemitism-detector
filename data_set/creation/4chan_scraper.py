@@ -69,7 +69,7 @@ def preprocess_json(thread_json,tokenizer):
         "thread": thread_json["posts"][0].get("no"),
         "initial_country": thread_json["posts"][0].get("country_name"),
         "posting_time": thread_json["posts"][0].get("now"),
-        "initial_comment": data_cleaner.clean_comment(thread_json["posts"][0].get("com"),tokenizer),
+        "initial_comment": data_cleaner.clean_comment(thread_json["posts"][0].get("com"), tokenizer),
         "replies": handle_replies(thread_json["posts"][1:],tokenizer) # give handle_replies() all the following posts after initial post
     }
 
