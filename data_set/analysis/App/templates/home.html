@@ -13,10 +13,24 @@
 <body id="frontpageBody">
 
 <div id="page-container">
+
     <div id="content-wrap">
         <h1 id="startscreen">4-Chan Data Set Analysis Tool</h1>
-
     </div>
+
+    <form class="form-inline" method="POST" action="/">
+        <div class="form-group">
+            <div id="filmselector" class="input-group">
+                <h1>Select Timespan</h1>
+                <select name="comp_select" class="selectpicker form-control">
+                    <option value="daily">daily</option>
+                    <option value="hourly">hourly</option>
+                </select>
+         <button type="submit" class="dropbtn">Go</button>
+            </div>
+
+        </div>
+    </form>
 
 
 </div>
