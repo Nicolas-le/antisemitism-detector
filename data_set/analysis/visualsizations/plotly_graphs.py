@@ -1,7 +1,6 @@
 import plotly.graph_objects as go
 from db_retrieve import DBRetrieval
 
-
 empath_lex = Empath()
 spacy_en_core = spacy.load('en_core_web_sm')
 retrieval = DBRetrieval()

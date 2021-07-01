@@ -3,8 +3,6 @@
 <head>
     <meta charset="utf-8">
     <title>Home</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" href="static/frontpage.css">
 </head>
 {% extends "templates.html" %}
@@ -15,24 +13,53 @@
 <div id="page-container">
 
     <div id="content-wrap">
-        <h1 id="startscreen">4-Chan Data Set Analysis Tool</h1>
+        <h1 id="startscreen">4-Chan Data Set Analysis Helper</h1>
+        <h1 id="startscreen2">Get the Thread to Thread ID</h1>
 
-        <form class="form-inline" method="POST" action="/">
-        <div class="form-group">
-            <div id="filmselector" class="input-group">
-                <h1>Select Timespan</h1>
-                <select name="comp_select" class="selectpicker form-control">
-                    <option value="daily">daily</option>
-                    <option value="hourly">hourly</option>
-                </select>
-         <button type="submit" class="dropbtn">Go</button>
-            </div>
 
-        </div>
-    </form>
+        <form method="POST">
+            <label for="thread_id">Thread ID:</label>
+            <input type="number" id="thread_id" name="fname"><br><br>
+            <input type="submit" value="Submit">
+        </form>
+
+        <div id="myData"></div>
+
+        <table id="thread-table">
+            {% for key, value in thread.items() %}
+            <tr>
+                <th> {{ key }} </th>
+
+                {% if key == "replies" %}
+                <td>
+                        <table id="sub-table">
+                        {% for reply in value %}
+                            {% for key2, value2 in reply.items() %}
+                                    <tr>
+                                        <th> {{ key2 }} </th>
+                                        <td> {{ value2 }} </td>
+                                    </tr>
+
+                            {% endfor %}
+
+                            <tr class="blank_row">
+                                <td bgcolor="#FFFFFF" colspan="3">&nbsp;</td>
+                            </tr>
+                        {% endfor %}
+                        </table>
+                    </td>
+
+                {% else %}
+                    <td> {{ value }} </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+
+        </table>
 
 
     </div>
+
 
 
 </div>

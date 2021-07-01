@@ -1,29 +1,26 @@
 from flask import Flask, render_template, request
-from App import data_preprocessing
 from App.db_retrieve import DBRetrieval
-from empath import Empath
-import spacy
 
 
 app = Flask(__name__)
-empath_lex = Empath()
-spacy_en_core = spacy.load('en_core_web_sm')
 retrieval = DBRetrieval()
 
-@app.route("/", methods=['GET', 'POST'])
+@app.route("/", methods=['POST',"GET"])
 def home():
 
-    # information per hour
-    #time_interval = "daily" # hourly, daily
-    time_interval = request.form.get('comp_select')
-    dates = []
+    thread_id = request.form.get('fname')
 
-    extracted_information = data_preprocessing.preprocess_post_per_time_interval(retrieval, time_interval)
-    for key,value in extracted_information.items():
-        dates.append(key)
+    if thread_id:
+        thread = retrieval.get_thread(int(thread_id))[0]
+    else:
+        thread = {}
+    return render_template('home.html', thread=thread)
 
-    print(dates)
+@app.context_processor
+def utility_functions():
+    def print_in_console(message):
+        print(str(message),flush=True)
 
-    return render_template('home.html',dates=dates, extracted_information=extracted_information)
+    return dict(mdebug=print_in_console)
 
 
