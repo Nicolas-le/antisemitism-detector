@@ -2,10 +2,8 @@ from tinydb import TinyDB, Query
 
 class DBRetrieval:
     def __init__(self):
-        self.detection_database = TinyDB('../detections_4chan_pol_database.json') # path for run_app.py
-        self.whole_database = TinyDB('../4chan_pol_database.json') #path from run_app.py
-        #self.whole_database = TinyDB('../../4chan_pol_database.json') # path for testing
-        #self.detection_database = TinyDB('../../detections_4chan_pol_database.json')
+        self.whole_database = TinyDB('../../4chan_pol_database.json') # path for testing
+        self.detection_database = TinyDB('../../detections_4chan_pol_database.json')
         self.test_contains = lambda value, search: search in value
 
     def retrieve_detections_per_time_interval(self, time_interval):

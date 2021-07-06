@@ -65,7 +65,7 @@ def preprocess_json(thread_json,tokenizer):
 
         return output_list
 
-    preprocessed_json = {
+    preproces sed_json = {
         "thread": thread_json["posts"][0].get("no"),
         "initial_country": thread_json["posts"][0].get("country_name"),
         "posting_time": thread_json["posts"][0].get("now"),
