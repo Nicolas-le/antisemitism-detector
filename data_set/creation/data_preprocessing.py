@@ -49,6 +49,8 @@ def topic_signal_mod(posts_of_date,empath_lex):
         for topic in filtered_topics:
             date_topics[topic] += filtered_topics[topic]
 
+
+
     date_topics = { k: v for k, v in sorted(date_topics.items(), key=lambda item: item[1], reverse=True) }
     top_ten = list(date_topics.items())[2:12]
 
