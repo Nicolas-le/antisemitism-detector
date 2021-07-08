@@ -1,6 +1,8 @@
 import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 from db_retrieve import DBRetrieval
 import data_preprocessing
+
 
 class Plotting():
 
@@ -103,27 +105,50 @@ class Plotting():
 
     def create_keyword_distr_plot(self):
         plots = {}
-        dates = []
-        values = []
 
-        for key, value in self.extracted_information.items():
-            dates.append(key)
-            values.append(value["keyword_distr"]["percentage_of_keyword_occ"]*100)
+        def create_percentage_plot():
+            dates = []
+            values = []
 
-        fig = go.Figure(data=[go.Bar(name="percentage_of_keyword_occ", x=dates, y=values)], layout=self.plot_layout)
-        fig.update_layout(barmode='stack')
+            for key, value in self.extracted_information.items():
+                dates.append(key)
+                values.append(value["keyword_distr"]["percentage_of_keyword_occ"]*100)
 
-        plots["percentage_of_keyword_occ"] = fig
+            fig = go.Figure(data=[go.Bar(name="percentage_of_keyword_occ", x=dates, y=values)], layout=self.plot_layout)
+            fig.update_layout(barmode='stack')
 
-        for key, value in self.extracted_information.items():
-            print(key)
-            print(value["keyword_distr"])
+            return fig
+
+        def create_highest_thread_plot():
+            plots = []
+            for key, value in self.extracted_information.items():
+                data = []
+
+                for thread, dict in value["keyword_distr"]["highest_threads"].items():
+                    keywords = []
+                    values = []
+
+                    for keyword, count in dict.items():
+                        keywords.append(keyword)
+                        values.append(count)
+
+                    data.append(go.Bar(name=thread, x=keywords, y=values))
+
+                fig = go.Figure(data=data, layout=self.plot_layout)
+                fig.update_layout(barmode='stack', title=key)
+
+                plots.append(fig)
+
+            return plots
+
+        plots["percentage_of_keyword_occ"] = create_percentage_plot()
+        plots["highest_thread_plot"] = create_highest_thread_plot()
 
         return plots
 
 
 plotter = Plotting("daily")
-#plotter.show_plot(plotter.keyword_distr_plots["percentage_of_keyword_occ"])
+for plot in plotter.keyword_distr_plots["highest_thread_plot"]:
+    plotter.show_plot(plot)
 #plotter.write_plot(plotter.topic_plot, "daily_topics")
 
-#create_detection_graphs("hourly")
