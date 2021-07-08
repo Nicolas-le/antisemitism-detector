@@ -2,7 +2,6 @@ from tinydb import TinyDB, Query
 
 class DBRetrieval:
     def __init__(self):
-        self.whole_database = TinyDB('../../4chan_pol_database.json') # path for testing
         self.detection_database = TinyDB('../../detections_4chan_pol_database.json')
         self.test_contains = lambda value, search: search in value
 

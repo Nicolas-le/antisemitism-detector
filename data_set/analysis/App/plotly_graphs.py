@@ -1,13 +1,11 @@
 import plotly.graph_objects as go
-from plotly.subplots import make_subplots
-from db_retrieve import DBRetrieval
-import data_preprocessing
+import App.data_preprocessing
 
 
 class Plotting():
 
-    def __init__(self, time_interval):
-        self.retrieval = DBRetrieval()
+    def __init__(self, time_interval, retrieval):
+        self.retrieval = retrieval
         self.time_interval = time_interval
         self.extracted_information = self.get_info_dict()
         self.plot_layout = go.Layout(autosize=False, width=1920, height=1080)
@@ -22,7 +20,7 @@ class Plotting():
         def get_sortable_int_hourly(date):
             return (int(date[3:5]), int(date[13:]))
 
-        info_dict = data_preprocessing.preprocess_post_per_time_interval(self.retrieval, self.time_interval)
+        info_dict = App.data_preprocessing.preprocess_post_per_time_interval(self.retrieval, self.time_interval)
 
         if self.time_interval == "daily":
             sorted_info_dict = dict(sorted(info_dict.items(), key=lambda item: get_sortable_int_daily(item[0])))
@@ -147,8 +145,7 @@ class Plotting():
         return plots
 
 
-plotter = Plotting("daily")
-plotter.show_plot(plotter.topic_plot)
+#plotter = Plotting("daily")
 #for plot in plotter.keyword_distr_plots["highest_thread_plot"]:
 #    plotter.show_plot(plot)
 #plotter.write_plot(plotter.topic_plot, "daily_topics")
