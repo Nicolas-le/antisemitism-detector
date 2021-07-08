@@ -9,8 +9,9 @@ class Plotting():
         self.time_interval = time_interval
         self.extracted_information = self.get_info_dict()
         self.plot_layout = go.Layout(autosize=False, width=1920, height=1080)
-        self.topic_plot = self.create_topic_plot()
-        self.counting_plots = self.create_counting_plots()
+        #self.topic_plot = self.create_topic_plot()
+        #self.counting_plots = self.create_counting_plots()
+        self.keyword_distr_plots = self.create_keyword_distr_plot()
 
     def get_info_dict(self):
         def get_sortable_int_daily(date):
@@ -87,12 +88,42 @@ class Plotting():
 
             plots[name] = fig
 
+        data = []
+        for date, value in self.extracted_information.items():
+            for thread in value["countings"]["special_threads"]["traffic"]:
+                if thread[1] >= 350:
+                    data.append(go.Bar(name=thread[0], x=[date], y=[thread[1]]))
+
+        fig = go.Figure(data=data, layout=self.plot_layout)
+        fig.update_layout(barmode='stack')
+
+        plots["special_threads"] = fig
+
+        return plots
+
+    def create_keyword_distr_plot(self):
+        plots = {}
+        dates = []
+        values = []
+
+        for key, value in self.extracted_information.items():
+            dates.append(key)
+            values.append(value["keyword_distr"]["percentage_of_keyword_occ"]*100)
+
+        fig = go.Figure(data=[go.Bar(name="percentage_of_keyword_occ", x=dates, y=values)], layout=self.plot_layout)
+        fig.update_layout(barmode='stack')
+
+        plots["percentage_of_keyword_occ"] = fig
+
+        for key, value in self.extracted_information.items():
+            print(key)
+            print(value["keyword_distr"])
+
         return plots
 
 
-
-plotter = Plotting("hourly")
-#plotter.show_plot(plotter.topic_plot)
+plotter = Plotting("daily")
+#plotter.show_plot(plotter.keyword_distr_plots["percentage_of_keyword_occ"])
 #plotter.write_plot(plotter.topic_plot, "daily_topics")
 
 #create_detection_graphs("hourly")
