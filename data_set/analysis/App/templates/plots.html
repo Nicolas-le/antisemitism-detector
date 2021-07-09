@@ -16,22 +16,70 @@
   <div id="content-wrap">
     <h1 id="startscreen">Analysis Plots</h1>
 
-    <div id="topics" class="container"></div>
 
-    <div id="psychologicalValues" class="container">
-      <h2>Topics</h2>
-      <div class="row">
-        <div class="col-md-6">
-          <div class="chart" id="topic">
-            <script type="text/javascript">
-              var topics = {{ topic_plot_json | tojson |safe}}
-              Plotly.newPlot('topic', [JSON.parse(topics)]);
-            </script>
-          </div>
+    <div id="topicModelling" class="container">
+        <h2>Topic Signal Modeling</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="topicModellingC" class="chart">
+                    <script>
+                    var topics = JSON.parse({{topic_plot_json| tojson |safe}});
+                    Plotly.plot('topicModellingC', topics.data, topics.layout);
+                    </script>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
+    <div id="countings" class="container">
+        <h2>Countings</h2>
+        <div class="row">
+            <div class="col-md-6">
+              <h3>Counts & Replies</h3>
+                <div id="count_replies" class="chart">
+                    <script>
+                    var count_replies = JSON.parse({{counting_plots["count_replies"]| tojson |safe}});
+                    Plotly.plot('count_replies', count_replies.data,count_replies.layout);
+                    </script>
+                </div>
+              <h3>Word Counts</h3>
+              <div id="counts" class="chart">
+                    <script>
+                    var counts = JSON.parse({{counting_plots["counts"]| tojson |safe}});
+                    Plotly.plot('counts', counts.data, counts.layout);
+                    </script>
+                </div>
+              <h3>Special Threads</h3>
+              <div id="special_threads" class="chart">
+                    <script>
+                    var special_threads = JSON.parse({{counting_plots["special_threads"]| tojson |safe}});
+                    Plotly.plot('special_threads', special_threads.data, special_threads.layout);
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+      <div id="keyword_plots" class="container">
+        <h2>Keyword Distributions</h2>
+        <div class="row">
+            <div class="col-md-6">
+              <h3>Percentage of occuring Keywords</h3>
+                <div id="percentage_of_keyword_occ" class="chart">
+                    <script>
+                    var percentage_of_keyword_occ = JSON.parse({{keyword_plots["percentage_of_keyword_occ"]| tojson |safe}});
+                    Plotly.plot('percentage_of_keyword_occ', percentage_of_keyword_occ.data, percentage_of_keyword_occ.layout);
+                    </script>
+                </div>
+              <h3>Thread with high Keyword Counts</h3>
+              <div id="highest_thread_plot" class="chart">
+                    <script>
+                    var highest_thread_plot = JSON.parse({{keyword_plots["highest_thread_plot"]| tojson |safe}});
+                    Plotly.plot('highest_thread_plot', highest_thread_plot.data, highest_thread_plot.layout);
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 

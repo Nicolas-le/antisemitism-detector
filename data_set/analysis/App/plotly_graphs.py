@@ -8,7 +8,7 @@ class Plotting():
         self.retrieval = retrieval
         self.time_interval = time_interval
         self.extracted_information = self.get_info_dict()
-        self.plot_layout = go.Layout(autosize=False, width=1920, height=1080)
+        self.plot_layout = go.Layout(autosize=False, width=800, height=500)
         self.topic_plot = self.create_topic_plot()
         self.counting_plots = self.create_counting_plots()
         self.keyword_distr_plots = self.create_keyword_distr_plot()
@@ -61,6 +61,8 @@ class Plotting():
 
         fig = go.Figure(data=data, layout= self.plot_layout)
         fig.update_layout(barmode='stack')
+        fig.update_xaxes(title_text="dates")
+        fig.update_yaxes(title_text="counts")
 
         return fig
 
@@ -85,6 +87,8 @@ class Plotting():
 
             fig = go.Figure(data=data, layout=self.plot_layout)
             fig.update_layout(barmode='group')
+            fig.update_xaxes(title_text="dates")
+            fig.update_yaxes(title_text="counts")
 
             plots[name] = fig
 
@@ -96,6 +100,8 @@ class Plotting():
 
         fig = go.Figure(data=data, layout=self.plot_layout)
         fig.update_layout(barmode='stack')
+        fig.update_xaxes(title_text="dates")
+        fig.update_yaxes(title_text="counts")
 
         plots["special_threads"] = fig
 

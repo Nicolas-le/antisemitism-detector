@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from App.db_retrieve import DBRetrieval
 from App.plotly_graphs import Plotting
 import json
-import plotly as go
+import plotly
 
 
 app = Flask(__name__)
@@ -23,11 +23,20 @@ def home():
 def plots():
     plotter = Plotting("daily", retrieval)
 
-    topic_plot_json = json.dumps(plotter.topic_plot, cls=go.utils.PlotlyJSONEncoder)
+    topic_plot_json = json.dumps(plotter.topic_plot, cls=plotly.utils.PlotlyJSONEncoder)
 
-    #graphJSON = json.dumps(data, cls=go.utils.PlotlyJSONEncoder)
+    counting_plots = {
+        "count_replies": json.dumps(plotter.counting_plots["count_replies"], cls=plotly.utils.PlotlyJSONEncoder),
+        "counts": json.dumps(plotter.counting_plots["counts"], cls=plotly.utils.PlotlyJSONEncoder),
+        "special_threads": json.dumps(plotter.counting_plots["special_threads"], cls=plotly.utils.PlotlyJSONEncoder)
+    }
 
-    return render_template('plots.html', topic_plot_json=topic_plot_json)
+    keyword_plots = {
+        "percentage_of_keyword_occ": json.dumps(plotter.keyword_distr_plots["percentage_of_keyword_occ"], cls=plotly.utils.PlotlyJSONEncoder),
+        "highest_thread_plot": json.dumps(plotter.keyword_distr_plots["highest_thread_plot"], cls=plotly.utils.PlotlyJSONEncoder)
+    }
+
+    return render_template('plots.html', topic_plot_json=topic_plot_json, counting_plots=counting_plots, keyword_plots=keyword_plots)
 
 
 @app.context_processor
