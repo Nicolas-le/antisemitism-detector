@@ -8,7 +8,8 @@ class Plotting():
         self.retrieval = retrieval
         self.time_interval = time_interval
         self.extracted_information = self.get_info_dict()
-        self.plot_layout = go.Layout(autosize=False, width=800, height=500)
+       #self.plot_layout = go.Layout(autosize=False, width=800, height=500)
+        self.plot_layout = go.Layout()
         self.topic_plot = self.create_topic_plot()
         self.counting_plots = self.create_counting_plots()
         self.keyword_distr_plots = self.create_keyword_distr_plot()
@@ -127,7 +128,6 @@ class Plotting():
                 dates.append(key)
                 values.append(value["keyword_distr"]["percentage_of_keyword_occ"]*100)
 
-            print(dates,flush=True)
             fig = go.Figure(data=[go.Bar(name="percentage_of_keyword_occ", x=dates, y=values)], layout=self.plot_layout)
             fig.update_layout(barmode='stack')
 

@@ -1,0 +1,58 @@
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 1px solid #bbb;
+  padding:.75em 1em .5em 1em;
+  box-shadow: 0 2px 1px 0 rgba(0,0,0,0.2);
+  background-color:#4CAF50;
+  background-position: right;
+  background-repeat: no-repeat;
+  font-family: 'Arial',sans-serif; font-size: 16px;
+  text-transform: uppercase;
+  color: white;
+
+}
+select:hover {
+  background-color:#3a853d;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,0.1);
+}
+option {
+  background-color:#4CAF50;
+  border-top:1px solid #444;
+  padding:.3em 1em .3em 1em;
+}
+.dropbtn {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: 1px solid #bbb;
+  padding:.75em 1em .5em 1em;
+  box-shadow: 0 2px 1px 0 rgba(0,0,0,0.2);
+  background-color:#4CAF50;
+  background-image:url(select-arrow.png);
+  background-position: right;
+  background-repeat: no-repeat;
+  font-family: 'Arial',sans-serif; font-size: 16px;
+  text-transform: uppercase;
+  color: white;
+}
+
+#topicModelling {
+    background-color: #FFF;
+    width: 100%;
+    right: 0;
+
+}
+
+#count_replies{
+    float: right;
+    width: 50%;
+    right: 0;
+
+}
+
+#counts{
+    position: left;
+    width: 50%;
+}
