@@ -53,11 +53,19 @@ class Plotting():
             values = []
             for date, value in self.extracted_information.items():
                 for day_topic in value["topic_distr"]:
+                    topic_appeared = False
+
                     if topic == day_topic[0]:
                         dates.append(date)
                         values.append(day_topic[1])
+                        topic_appeared = True
+
+                    if not topic_appeared:
+                        dates.append(date)
+                        values.append(0)
 
             data.append(go.Bar(name=topic, x=dates, y=values))
+
 
         fig = go.Figure(data=data, layout= self.plot_layout)
         fig.update_layout(barmode='stack')
@@ -68,12 +76,12 @@ class Plotting():
 
     def create_counting_plots(self):
         plots = {}
-        data = []
         concepts = {"count_replies": ["count","replies"],
                     "counts": ["word_count_total", "word_count_without_stopwords"]
                     }
 
         for name, list in concepts.items():
+            data = []
             for concept in list:
                 dates = []
                 values = []
@@ -84,6 +92,7 @@ class Plotting():
                             values.append(val)
 
                 data.append(go.Bar(name=concept, x=dates, y=values))
+
 
             fig = go.Figure(data=data, layout=self.plot_layout)
             fig.update_layout(barmode='group')
@@ -118,6 +127,7 @@ class Plotting():
                 dates.append(key)
                 values.append(value["keyword_distr"]["percentage_of_keyword_occ"]*100)
 
+            print(dates,flush=True)
             fig = go.Figure(data=[go.Bar(name="percentage_of_keyword_occ", x=dates, y=values)], layout=self.plot_layout)
             fig.update_layout(barmode='stack')
 
@@ -151,8 +161,4 @@ class Plotting():
         return plots
 
 
-#plotter = Plotting("daily")
-#for plot in plotter.keyword_distr_plots["highest_thread_plot"]:
-#    plotter.show_plot(plot)
-#plotter.write_plot(plotter.topic_plot, "daily_topics")
 
