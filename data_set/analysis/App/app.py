@@ -1,12 +1,15 @@
 from flask import Flask, render_template, request
 from App.db_retrieve import DBRetrieval
 from App.plotly_graphs import Plotting
+import App.data_preprocessing
 import json
 import plotly
+import spacy
 
 
 app = Flask(__name__)
 retrieval = DBRetrieval()
+spacy_en_core = spacy.load('en_core_web_sm')
 
 @app.route("/", methods=['POST',"GET"])
 def home():
@@ -29,9 +32,26 @@ def plots():
 
     plotter = Plotting(time_interval, retrieval)
     plots =  get_json_plots(plotter)
-    print(len(plots["keyword_plots"]["highest_thread_plot"]),flush=True)
 
     return render_template('plots.html', plots=plots)
+
+@app.route("/keyword", methods=['POST',"GET"])
+def keyword():
+    keyword_string = request.form.get('keyword_string')
+
+    if keyword_string is not None:
+        keyword_list = split_into_list(keyword_string)
+    else:
+        keyword_list = ["jew", "kike", "zionist", "israel", "shylock", "yid"]
+
+    highest_cooc_words = App.data_preprocessing.get_keyword_information(retrieval, spacy_en_core, keyword_list)
+
+
+    return render_template('keyword.html', highest_cooc_words=highest_cooc_words)
+
+def split_into_list(string):
+    return string.split(",")
+
 
 
 @app.context_processor
@@ -40,7 +60,6 @@ def utility_functions():
         print(str(message),flush=True)
 
     return dict(mdebug=print_in_console)
-
 
 def get_json_plots(plotter):
 
@@ -51,7 +70,6 @@ def get_json_plots(plotter):
             list_of_plots.append(("counter"+str(counter), json.dumps(plot, cls=plotly.utils.PlotlyJSONEncoder)))
             counter += 1
 
-        print(list_of_plots,flush=True)
         return list_of_plots
 
     plots = {

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Keyword Analysis</title>
+  <link rel="stylesheet" href="static/frontpage.css">
+</head>
+{% extends "templates.html" %}
+{% block content %}
+<body>
+
+<body id="frontpageBody">
+
+    <div id="page-container">
+
+        <div id="content-wrap">
+            <h1 id="startscreen">Keyword Analysis</h1>
+            <h1 id="startscreen2">Get the top occuring words with a list of own keywords.</h1>
+            <form method="POST">
+                <label for="name">Type a keyword string. <br>Seperate with ",". F.ex.: word1,word2,word3</label>
+                <input type="text" id="name" name="keyword_string">
+                <button type="submit" class="dropbtn">Select</button>
+            </form>
+        </div>
+
+        <table id="thread-table">
+            {% for keyword, list in highest_cooc_words.items() %}
+            <tr>
+                <th> {{ keyword }} </th>
+                <td> {{ list }} </td>
+
+            </tr>
+            {% endfor %}
+
+        </table>
+
+
+    </div>
+
+
+</body>
+{% endblock %}
+</html>
