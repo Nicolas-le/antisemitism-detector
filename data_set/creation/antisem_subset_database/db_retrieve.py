@@ -1,0 +1,27 @@
+from tinydb import TinyDB, Query
+from collections import defaultdict
+
+class DBRetrieval:
+    def __init__(self):
+        #self.original_database = TinyDB('../../4chan_pol_database.json') #path from run_app.py
+        self.antisemitic_subset = TinyDB('../../antisemitic_subset.json')
+        self.initial_subset = TinyDB("./initial_subset.json")
+        #self.restructured_data_set = self.get_restructured_data_set()
+
+    def get_restructured_data_set(self):
+        # restructuring (should be for whole data set)
+        restructured_dataset = defaultdict(dict)
+
+        for t in self.original_database.all():
+            t = dict(t)
+            thread_id = t["thread"]
+            t.pop("thread")
+            restructured_dataset[thread_id] = t
+
+        return restructured_dataset
+
+    def save_to_new_db(self, comments, db):
+        db.insert(comments)
+        db.close()
+
+
