@@ -1,8 +1,8 @@
-import data_preprocessing
+from data_set.creation.detection_database import data_preprocessing
 from collections import defaultdict
 import spacy
 from empath import Empath
-from tinydb import TinyDB, Query
+from tinydb import TinyDB
 from tinydb.storages import JSONStorage
 from tinydb.middlewares import CachingMiddleware
 
@@ -24,7 +24,7 @@ def get_data(time_interval):
     for date in dates:
         print(counter,flush=True)
         counter += 1
-        extracted_information[time_interval][date] = data_preprocessing.get_info_per_date(date,empath_lex,spacy_en_core)
+        extracted_information[time_interval][date] = data_preprocessing.get_info_per_date(date, empath_lex, spacy_en_core)
 
         #print(extracted_information,flush=True)
 

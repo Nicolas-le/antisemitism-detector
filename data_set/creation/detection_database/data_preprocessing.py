@@ -1,9 +1,5 @@
-from db_retrieve import DBRetrieval
-from empath import Empath
+from data_set.creation.detection_database.db_retrieve import DBRetrieval
 from collections import defaultdict
-import spacy
-import time
-
 
 retrieval = DBRetrieval()
 
