@@ -53,7 +53,6 @@ def split_into_list(string):
     return string.split(",")
 
 
-
 @app.context_processor
 def utility_functions():
     def print_in_console(message):

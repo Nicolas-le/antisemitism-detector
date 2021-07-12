@@ -26,11 +26,11 @@ def get_thread_with_keywords(restructured_dataset, keyword_list):
 
     return keyword_threads
 
-def get_coocs(spacy_en_core, keyword_threads, keyword_list):
+def get_coocs(spacy_en_core, keyword_threads, keyword_list, include_replies=True):
     def remove_stopwords(words):
         all_stopwords = spacy_en_core.Defaults.stop_words
         tokens_without_sw = [word for word in words if not word in all_stopwords]
-        punctuations = [".", ",", "-", "\"", ":", "?", "!", "\'","(",")","\'\'","@","//","","``"]
+        punctuations = [".", ",", "-", "\"", ":", "?", "!", "\'","(",")","\'\'","@","//","","``","%"]
         tokens_without_sw = [word for word in tokens_without_sw if not word in punctuations]
         return tokens_without_sw
 
@@ -54,6 +54,12 @@ def get_coocs(spacy_en_core, keyword_threads, keyword_list):
             coocs = find_coocs(value["initial_comment"], 9, word)
             if coocs:
                 keyword_coocs[word].append(coocs)
+
+            if include_replies:
+                for reply in value["replies"]:
+                    coocs = find_coocs(reply["comment"], 9, word)
+                    if coocs:
+                        keyword_coocs[word].append(coocs)
 
     return keyword_coocs
 
