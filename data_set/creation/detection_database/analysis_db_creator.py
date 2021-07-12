@@ -1,4 +1,4 @@
-from data_set.creation.detection_database import data_preprocessing
+import data_preprocessing
 from collections import defaultdict
 import spacy
 from empath import Empath
