@@ -5,15 +5,16 @@ class SubsetCreator():
 
     def __init__(self):
         self.retrieval = DBRetrieval()
-        print("Retrieval loaded...",flush=True)
         self.keywords = self.create_keywords()
-        print("Keywords loaded...",flush=True)
+        self.last_entry = self.get_last_entry()
+        print(self.last_entry)
 
     def main(self):
-        antisemitic_subset = {}
+
 
         for table in self.retrieval.initial_subset.all():
             for comment_id in table:
+                antisemitic_subset = {}
                 print("Comment ID: {}",format(comment_id))
                 print(table[comment_id])
 
@@ -35,8 +36,13 @@ class SubsetCreator():
 
                 print("-"*80)
 
-        self.retrieval.antisemitic_subset.insert(antisemitic_subset)
+                self.retrieval.antisemitic_subset.insert(antisemitic_subset)
+
         self.retrieval.antisemitic_subset.close()
+
+    def get_last_entry(self):
+
+        return self.retrieval.antisemitic_subset.get(doc_id=len(self.retrieval.antisemitic_subset)).keys()
 
 
     def decision(self):
@@ -51,7 +57,6 @@ class SubsetCreator():
         else:
             print("No valid decision")
             return self.decision()
-
 
     def create_keywords(self):
         keyword_list = ["jew","jews","bankers","kike","hitler","kikes","nigger","niggers","holocaust","whites","racist","zionist","palestinian","palestinians","ngos","migrants","shylock","jewish","interests","nationalist","sand","zog","yid"]
