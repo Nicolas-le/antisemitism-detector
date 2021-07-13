@@ -35,6 +35,11 @@ class SubsetCreator():
                     "comment": table[comment_id],
                     "label": 0
                 }
+            elif decision == 3:
+                antisemitic_subset[comment_id] = {
+                    "comment": table[comment_id],
+                    "label": 3
+                }
             elif decision == 5:
                 print("Exiting the Tool\nLast inserted comment ID: {}".format(int(comment_id)-1))
                 return False
@@ -53,7 +58,7 @@ class SubsetCreator():
         return last_entry
 
     def decision(self):
-        print("\n1 = antisem ; 0 = not antisem, 5 = break",flush=True)
+        print("\n1 = antisem ; 0 = not antisem, 3 = unsure, 5 = break",flush=True)
 
         try:
             decision = int(input())
@@ -61,15 +66,8 @@ class SubsetCreator():
             print("No valid decision")
             return 5
 
-        if decision == 1:
-            return 1
-        elif decision == 0:
-            return 0
-        elif decision == 5:
-            return 5
-        else:
-            print("No valid decision")
-            return 5
+        return decision
+
 
     def create_keywords(self):
         keyword_list = ["jew","jews","bankers","kike","hitler","kikes","nigger","niggers","holocaust","whites","racist","zionist","palestinian","palestinians","ngos","migrants","shylock","jewish","interests","nationalist","sand","zog","yid"]
