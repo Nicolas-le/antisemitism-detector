@@ -1,12 +1,14 @@
 from tinydb import TinyDB, Query
 from collections import defaultdict
+from tinydb.storages import JSONStorage
+from tinydb.middlewares import CachingMiddleware
 
 class DBRetrieval:
     def __init__(self):
-        #self.original_database = TinyDB('../../4chan_pol_database.json') #path from run_app.py
+        self.original_database = TinyDB('../../4chan_pol_database.json') #path from run_app.py
         self.antisemitic_subset = TinyDB('../../antisemitic_subset.json')
-        self.initial_subset = TinyDB("./initial_subset.json")
-        #self.restructured_data_set = self.get_restructured_data_set()
+        self.initial_subset = TinyDB("./initial_subset.json", storage=CachingMiddleware(JSONStorage))
+        self.restructured_data_set = self.get_restructured_data_set()
 
     def get_restructured_data_set(self):
         # restructuring (should be for whole data set)
