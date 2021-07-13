@@ -100,8 +100,6 @@ class SubsetCreator():
         self.retrieval.initial_subset.close()
 
 
-
-
 creator = SubsetCreator()
 creator.main()
 #creator.create_initial_subset()
