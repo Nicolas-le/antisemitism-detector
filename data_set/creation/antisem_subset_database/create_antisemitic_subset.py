@@ -6,42 +6,44 @@ class SubsetCreator():
     def __init__(self):
         self.retrieval = DBRetrieval()
         self.keywords = self.create_keywords()
-        self.last_entry = self.get_last_entry()
-        print(list(self.last_entry.keys())[0])
+        self.last_entry = int(list(self.get_last_entry().keys())[0])
 
     def main(self):
 
-        print(type(self.retrieval.initial_subset.all()))
-        print(self.retrieval.initial_subset.all()[1:])
-
-
-        for table in self.retrieval.initial_subset.all():
-            for comment_id in table:
-                antisemitic_subset = {}
-                print("Comment ID: {}".format(comment_id))
-                print(table[comment_id])
-
-                decision = self.decision()
-
-                if decision == 1:
-                    antisemitic_subset[comment_id] = {
-                        "comment": table[comment_id],
-                        "label": 1
-                    }
-                elif decision == 0:
-                    antisemitic_subset[comment_id] = {
-                        "comment": table[comment_id],
-                        "label": 0
-                    }
-                elif decision == 5:
-                    print("Exiting the Tool\nLast inserted comment ID: {}".format(int(comment_id)-1))
-                    break
-
-                print("-"*80)
-
-                self.retrieval.antisemitic_subset.insert(antisemitic_subset)
+        for table in self.retrieval.initial_subset.all()[self.last_entry+1:]:
+            if not self.get_antisem_comment(table):
+                break
 
         self.retrieval.antisemitic_subset.close()
+
+    def get_antisem_comment(self, table):
+
+        for comment_id in table:
+            antisemitic_subset = {}
+            print("Comment ID: {}".format(comment_id))
+            print(table[comment_id])
+
+            decision = self.decision()
+
+            if decision == 1:
+                antisemitic_subset[comment_id] = {
+                    "comment": table[comment_id],
+                    "label": 1
+                }
+            elif decision == 0:
+                antisemitic_subset[comment_id] = {
+                    "comment": table[comment_id],
+                    "label": 0
+                }
+            elif decision == 5:
+                print("Exiting the Tool\nLast inserted comment ID: {}".format(int(comment_id)-1))
+                return False
+
+            self.retrieval.antisemitic_subset.insert(antisemitic_subset)
+            print("-"*80)
+            return True
+
+
 
     def get_last_entry(self):
 
@@ -92,6 +94,7 @@ class SubsetCreator():
                     self.retrieval.initial_subset.insert(keyword_comments)
 
             if ID % 5000 == 0:
+
                 self.retrieval.restart_subset_db()
 
         self.retrieval.initial_subset.close()
@@ -100,5 +103,5 @@ class SubsetCreator():
 
 
 creator = SubsetCreator()
-#creator.main()
-creator.create_initial_subset()
+creator.main()
+#creator.create_initial_subset()
