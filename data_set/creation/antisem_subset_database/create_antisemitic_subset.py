@@ -6,7 +6,7 @@ class SubsetCreator():
     def __init__(self):
         self.retrieval = DBRetrieval()
         self.keywords = self.create_keywords()
-        self.last_entry = int(list(self.get_last_entry().keys())[0])
+        self.last_entry = self.get_last_entry()
 
     def main(self):
 
@@ -43,12 +43,14 @@ class SubsetCreator():
             print("-"*80)
             return True
 
-
-
     def get_last_entry(self):
+        last_entry = self.retrieval.antisemitic_subset.get(doc_id=len(self.retrieval.antisemitic_subset))
+        try:
+            last_entry = int(list(last_entry.keys())[0])
+        except AttributeError:
+            last_entry = -1
 
-        return self.retrieval.antisemitic_subset.get(doc_id=len(self.retrieval.antisemitic_subset))
-
+        return last_entry
 
     def decision(self):
         print("\n1 = antisem ; 0 = not antisem, 5 = break",flush=True)
