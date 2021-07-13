@@ -22,8 +22,8 @@ class DBRetrieval:
 
         return restructured_dataset
 
-    def save_to_new_db(self, comments, db):
-        db.insert(comments)
-        db.close()
+    def restart_subset_db(self):
+        self.initial_subset.close()
+        self.initial_subset = TinyDB("./initial_subset.json", storage=CachingMiddleware(JSONStorage))
 
 
