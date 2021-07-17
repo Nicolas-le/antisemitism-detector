@@ -9,6 +9,7 @@ class SubsetCreator():
         self.last_entry = self.get_last_entry()
 
     def main(self):
+        self.header()
 
         for table in self.retrieval.initial_subset.all()[self.last_entry+1:]:
             if not self.get_antisem_comment(table):
@@ -68,6 +69,25 @@ class SubsetCreator():
 
         return decision
 
+    def header(self):
+        print("FUCK ANTISEMITISM\nLabel the shit out of the comments!")
+        antisem = 0
+        nantisem = 0
+        unsure = 0
+
+        for comment in self.retrieval.antisemitic_subset.all():
+            for id in comment:
+                if comment[id]["label"] == 1:
+                    antisem += 1
+                elif comment[id]["label"] == 0:
+                    nantisem += 1
+                elif comment[id]["label"] == 3:
+                    unsure += 1
+
+        print("The Database contains...\n...comments, "
+              "labeled as antisemitic: {}\n...comments, labeled as not antisemitic: "
+              "{}\n...and comments, labeled as unsure: {}".format(antisem,nantisem,unsure))
+        print("_"*100)
 
     def create_keywords(self):
         keyword_list = ["jew","jews","bankers","kike","hitler","kikes","nigger","niggers","holocaust","whites","racist","zionist","palestinian","palestinians","ngos","migrants","shylock","jewish","interests","nationalist","sand","zog","yid"]
