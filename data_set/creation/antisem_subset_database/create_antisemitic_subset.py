@@ -10,11 +10,15 @@ class SubsetCreator():
 
     def main(self):
         self.header()
+        inserted_counter = 0
 
         for table in self.retrieval.initial_subset.all()[self.last_entry+1:]:
             if not self.get_antisem_comment(table):
                 break
+            inserted_counter += 1
 
+        print("You have inserted {} comments in one session! Congrats! *_*".format(inserted_counter))
+        print("#"*100)
         self.retrieval.antisemitic_subset.close()
 
     def get_antisem_comment(self, table):
