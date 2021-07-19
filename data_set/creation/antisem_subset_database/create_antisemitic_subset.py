@@ -1,5 +1,5 @@
 from db_retrieve import DBRetrieval
-
+from pyfiglet import Figlet
 
 class SubsetCreator():
 
@@ -74,7 +74,9 @@ class SubsetCreator():
         return decision
 
     def header(self):
-        print("FUCK ANTISEMITISM\nLabel the shit out of the comments!")
+        f = Figlet(font="slant")
+        print(f.renderText("FUCK ANTISEMITISM"))
+        print("Label the shit out of the comments!")
         antisem = 0
         nantisem = 0
         unsure = 0
