@@ -8,7 +8,7 @@ class Plotting():
         self.retrieval = retrieval
         self.time_interval = time_interval
         self.extracted_information = self.get_info_dict()
-       #self.plot_layout = go.Layout(autosize=False, width=800, height=500)
+        #self.plot_layout = go.Layout(autosize=False, width=800, height=500)
         self.plot_layout = go.Layout()
         self.topic_plot = self.create_topic_plot()
         self.counting_plots = self.create_counting_plots()
@@ -53,6 +53,8 @@ class Plotting():
             dates = []
             values = []
             for date, value in self.extracted_information.items():
+                if date == "05/07/21(Fri)":
+                    continue
                 for day_topic in value["topic_distr"]:
                     topic_appeared = False
 
@@ -87,6 +89,8 @@ class Plotting():
                 dates = []
                 values = []
                 for date, value in self.extracted_information.items():
+                    if date == "05/07/21(Fri)":
+                        continue
                     for conc, val in value["countings"]["thread_general"].items():
                         if concept == conc:
                             dates.append(date)
@@ -104,6 +108,8 @@ class Plotting():
 
         data = []
         for date, value in self.extracted_information.items():
+            if date == "05/07/21(Fri)":
+                continue
             for thread in value["countings"]["special_threads"]["traffic"]:
                 if thread[1] >= 350:
                     data.append(go.Bar(name=thread[0], x=[date], y=[thread[1]]))
@@ -125,6 +131,8 @@ class Plotting():
             values = []
 
             for key, value in self.extracted_information.items():
+                if key == "05/07/21(Fri)":
+                    continue
                 dates.append(key)
                 values.append(value["keyword_distr"]["percentage_of_keyword_occ"]*100)
 
@@ -136,6 +144,8 @@ class Plotting():
         def create_highest_thread_plot():
             plots = []
             for key, value in self.extracted_information.items():
+                if key == "05/07/21(Fri)":
+                    continue
                 data = []
 
                 for thread, dict in value["keyword_distr"]["highest_threads"].items():
