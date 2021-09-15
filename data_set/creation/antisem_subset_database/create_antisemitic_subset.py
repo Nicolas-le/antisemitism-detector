@@ -96,8 +96,16 @@ class SubsetCreator():
         print("_"*100)
 
     def create_keywords(self):
-        keyword_list = ["jew","jews","bankers","kike","hitler","kikes","nigger","niggers","holocaust","whites","racist","zionist","palestinian","palestinians","ngos","migrants","shylock","jewish","interests","nationalist","sand","zog","yid"]
-        return keyword_list
+        kl_jewish = ["jew","jews","jewish","judaism","david"]
+        kl_middle_east = ["israel","zionist","zionists","palestinian","palestinians","nationalist","hamas","idf"]
+        kl__slurs = ["kike","kikes","shylock","zog","yid","zhyd","shyster","smouch"]
+        kl_racist = ["nigger","niggers","racist","migrants"]
+        kl_synonyms = ["bankers","ngos","interests"]
+        kl_rest = ["hitler", "holocaust","whites","sand","nazi","antisemitic"]
+
+        final_list = kl_jewish + kl_middle_east + kl__slurs + kl_racist + kl_synonyms + kl_rest
+
+        return final_list
 
     def create_initial_subset(self):
         ID = 0

@@ -46,14 +46,27 @@ def topic_signal_mod(posts_of_date,empath_lex):
 
     return top_ten
 
+def get_keyword_list():
+    # keyword_list = ["jew", "kike", "zionist", "israel", "shylock", "yid"] old one
+
+
+    kl_jewish = ["jew", "jews", "jewish", "judaism", "david"]
+    kl_middle_east = ["israel", "zionist", "zionists", "palestinian", "palestinians", "nationalist", "hamas", "idf"]
+    kl__slurs = ["kike", "kikes", "shylock", "zog", "yid", "zhyd", "shyster", "smouch"]
+    kl_racist = ["nigger", "niggers", "racist", "migrants"]
+    kl_synonyms = ["bankers", "ngos", "interests"]
+    kl_rest = ["hitler", "holocaust", "whites", "sand", "nazi", "antisemitic"]
+
+    return kl_jewish + kl_middle_east + kl__slurs + kl_racist + kl_synonyms + kl_rest
+
 def get_keyword_distr(posts_of_date):
     """
     Returns a dictionary containing the threads with the highest keyword_counts and their distribution.
     :param posts_of_date:
     :return:
     """
-    #keyword_list = ["jew","kike","zionist","israel","shylock","yid"]
-    keyword_list = ["jew","jews","bankers","kike","hitler","kikes","nigger","niggers","holocaust","whites","racist","zionist","palestinian","palestinians","ngos","migrants","shylock","jewish","interests","nationalist","sand","zog","yid"]
+    keyword_list = get_keyword_list()
+
     keyword_distribution = {
         "percentage_of_keyword_occ": 0,
         "highest_threads": defaultdict(dict)
