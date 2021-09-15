@@ -97,13 +97,13 @@ class SubsetCreator():
 
     def create_keywords(self):
         kl_jewish = ["jew","jews","jewish","judaism","david"]
-        kl_middle_east = ["israel","zionist","zionists","palestinian","palestinians","nationalist","hamas","idf"]
-        kl__slurs = ["kike","kikes","shylock","zog","yid","zhyd","shyster","smouch"]
+        kl_middle_east = ["israel","zionist","zionists","palestinian","palestinians","nationalist","hamas","idf","gaza"]
+        kl_slurs = ["kike","kikes","shylock","zog","yid","zhyd","shyster","smouch","scapegoat","grug"]
         kl_racist = ["nigger","niggers","racist","migrants"]
-        kl_synonyms = ["bankers","ngos","interests"]
-        kl_rest = ["hitler", "holocaust","whites","sand","nazi","antisemitic"]
+        kl_synonyms = ["bankers","ngos","interests","globalist","greed","illuminati","nwo","academics","lobbyists"]
+        kl_rest = ["hitler", "holocaust","whites","sand","nazi","antisemitic","clannish","control","cowardice","creatures","(((echo)))","silencing","media"]
 
-        final_list = kl_jewish + kl_middle_east + kl__slurs + kl_racist + kl_synonyms + kl_rest
+        final_list = kl_jewish + kl_middle_east + kl_slurs + kl_racist + kl_synonyms + kl_rest
 
         return final_list
 

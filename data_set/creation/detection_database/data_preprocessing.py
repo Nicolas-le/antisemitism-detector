@@ -49,15 +49,16 @@ def topic_signal_mod(posts_of_date,empath_lex):
 def get_keyword_list():
     # keyword_list = ["jew", "kike", "zionist", "israel", "shylock", "yid"] old one
 
-
     kl_jewish = ["jew", "jews", "jewish", "judaism", "david"]
-    kl_middle_east = ["israel", "zionist", "zionists", "palestinian", "palestinians", "nationalist", "hamas", "idf"]
-    kl__slurs = ["kike", "kikes", "shylock", "zog", "yid", "zhyd", "shyster", "smouch"]
+    kl_middle_east = ["israel", "zionist", "zionists", "palestinian", "palestinians", "nationalist", "hamas", "idf",
+                      "gaza"]
+    kl_slurs = ["kike", "kikes", "shylock", "zog", "yid", "zhyd", "shyster", "smouch", "scapegoat", "grug"]
     kl_racist = ["nigger", "niggers", "racist", "migrants"]
-    kl_synonyms = ["bankers", "ngos", "interests"]
-    kl_rest = ["hitler", "holocaust", "whites", "sand", "nazi", "antisemitic"]
+    kl_synonyms = ["bankers", "ngos", "interests", "globalist", "greed", "illuminati", "nwo", "academics", "lobbyists"]
+    kl_rest = ["hitler", "holocaust", "whites", "sand", "nazi", "antisemitic", "clannish", "control", "cowardice",
+               "creatures", "(((echo)))", "silencing", "media"]
 
-    return kl_jewish + kl_middle_east + kl__slurs + kl_racist + kl_synonyms + kl_rest
+    return kl_jewish + kl_middle_east + kl_slurs + kl_racist + kl_synonyms + kl_rest
 
 def get_keyword_distr(posts_of_date):
     """
