@@ -22,33 +22,27 @@ def topic_signal_mod(posts_of_date,empath_lex):
     :param empath_lex:
     :return:
     """
-    date_topics = defaultdict(float)
+    date_tokens = []
 
     for thread in posts_of_date:
-        thread_tokens = []
-        thread_tokens += thread["initial_comment"]
-
+        date_tokens += thread["initial_comment"]
         for reply in thread["replies"]:
-            thread_tokens += reply
+            date_tokens += reply
 
-        if not thread_tokens:
-            continue
+    date_topics = empath_lex.analyze(date_tokens, normalize=True)
+    date_word_count = len(date_tokens)
 
-        topics = empath_lex.analyze(thread_tokens, normalize=True)
+    threshold = 0.001
+    if date_topics is not None:
+        date_topic_dictionary = {k: v for k,v in date_topics.items() if v >= threshold}
+    else:
+        return []
 
-        threshold = 0.001
-        if topics is not None:
-            filtered_topics = {k: v for k,v in topics.items() if v >= threshold}
-        else:
-            return []
+    #for topic, value in date_topic_dictionary.items():
+    #    date_topic_dictionary[topic] = (value/date_word_count)*1000000
 
-        for topic in filtered_topics:
-            date_topics[topic] += filtered_topics[topic]
-
-
-
-    date_topics = { k: v for k, v in sorted(date_topics.items(), key=lambda item: item[1], reverse=True) }
-    top_ten = list(date_topics.items())[2:12]
+    date_topic_dictionary = {k: v for k, v in sorted(date_topic_dictionary.items(), key=lambda item: item[1], reverse=True)}
+    top_ten = list(date_topic_dictionary.items())[2:12]
 
     return top_ten
 
@@ -58,7 +52,8 @@ def get_keyword_distr(posts_of_date):
     :param posts_of_date:
     :return:
     """
-    keyword_list = ["jew","kike","zionist","israel","shylock","yid"]
+    #keyword_list = ["jew","kike","zionist","israel","shylock","yid"]
+    keyword_list = ["jew","jews","bankers","kike","hitler","kikes","nigger","niggers","holocaust","whites","racist","zionist","palestinian","palestinians","ngos","migrants","shylock","jewish","interests","nationalist","sand","zog","yid"]
     keyword_distribution = {
         "percentage_of_keyword_occ": 0,
         "highest_threads": defaultdict(dict)

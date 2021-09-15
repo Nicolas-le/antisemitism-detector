@@ -3,7 +3,7 @@ from tinydb import TinyDB, Query
 
 class DBRetrieval:
     def __init__(self):
-        self.database = TinyDB('../4chan_pol_database.json')
+        self.database = TinyDB('../../4chan_pol_database.json')
         self.test_contains = lambda value, search: search in value
 
     def get_post_per_day(self,date):
