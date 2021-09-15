@@ -5,11 +5,12 @@ import App.data_preprocessing
 import json
 import plotly
 import spacy
-
+from empath import Empath
 
 app = Flask(__name__)
 retrieval = DBRetrieval()
 spacy_en_core = spacy.load('en_core_web_sm')
+empath_lex = Empath()
 
 @app.route("/", methods=['POST',"GET"])
 def home():
@@ -18,6 +19,7 @@ def home():
 
     if thread_id:
         thread = retrieval.get_thread(int(thread_id))[0]
+        thread = get_topics_initial_comment(thread)
     else:
         thread = {}
     return render_template('home.html', thread=thread)
@@ -52,7 +54,6 @@ def keyword():
 def split_into_list(string):
     return string.split(",")
 
-
 @app.context_processor
 def utility_functions():
     def print_in_console(message):
@@ -85,3 +86,31 @@ def get_json_plots(plotter):
     }
 
     return plots
+
+def get_topics_initial_comment(thread):
+
+    topics = empath_lex.analyze(thread["initial_comment"], normalize=True)
+    word_count = len(thread["initial_comment"])
+
+    threshold = 0.001
+    if topics is not None:
+        topic_dictionary = {k: v for k,v in topics.items() if v >= threshold}
+    else:
+        return []
+
+    #for topic, value in topic_dictionary.items():
+    #    topic_dictionary[topic] = (value/word_count)*1000000
+
+    topic_dictionary = {k: v for k, v in sorted(topic_dictionary.items(), key=lambda item: item[1], reverse=True)}
+    top_ten = list(topic_dictionary.items())[2:12]
+
+    new_thread = {
+        "thread": thread["thread"],
+        "initial_country": thread["initial_country"],
+        "posting_time": thread["posting_time"],
+        "initial_comment": thread["initial_comment"],
+        "topics": top_ten,
+        "replies": thread["replies"]
+    }
+
+    return new_thread
