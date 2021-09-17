@@ -55,10 +55,12 @@ def get_keyword_list():
     kl_slurs = ["kike", "kikes", "shylock", "zog", "yid", "zhyd", "shyster", "smouch", "scapegoat", "grug"]
     kl_racist = ["nigger", "niggers", "racist", "migrants"]
     kl_synonyms = ["bankers", "ngos", "interests", "globalist", "greed", "illuminati", "nwo", "academics", "lobbyists"]
-    kl_rest = ["hitler", "holocaust", "whites", "sand", "nazi", "antisemitic", "clannish", "control", "cowardice",
+    kl_uncategorized = ["hitler", "holocaust", "whites", "sand", "nazi", "antisemitic", "clannish", "control", "cowardice",
                "creatures", "(((echo)))", "silencing", "media"]
 
-    return kl_jewish + kl_middle_east + kl_slurs + kl_racist + kl_synonyms + kl_rest
+    final_list = kl_jewish + kl_middle_east + kl_slurs + kl_racist + kl_synonyms + kl_uncategorized
+
+    return final_list
 
 def get_keyword_distr(posts_of_date):
     """
