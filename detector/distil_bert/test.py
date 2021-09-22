@@ -16,9 +16,7 @@ def classifier():
 
 def test():
 
-
     antisem_classifier = classifier()
-
 
     with open("../data_train.csv",newline='') as csv_file:
         reader = csv.DictReader(csv_file)
