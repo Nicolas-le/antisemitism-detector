@@ -1,5 +1,6 @@
 from transformers import EvalPrediction
 from sklearn.metrics import accuracy_score
+import numpy as np
 
 
 def antisem_metrics(pred: EvalPrediction):
@@ -15,7 +16,7 @@ def antisem_metrics(pred: EvalPrediction):
     noHatePreds = preds[[mapper(l) for l in 1 - labels]]
 
     return {
-      'accHate': accuracy_score(hatePreds, np.ones_like(hatePreds)),
-      'accNoHate': accuracy_score(noHatePreds, np.zeros_like(noHatePreds)),
-      'accAll': accuracy_score(labels, preds),
+      'acc_antisemitism': accuracy_score(hatePreds, np.ones_like(hatePreds)),
+      'acc_notantisemitism': accuracy_score(noHatePreds, np.zeros_like(noHatePreds)),
+      'acc_all': accuracy_score(labels, preds),
     }
