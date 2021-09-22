@@ -8,6 +8,9 @@ from util import create_test_train, tokenize_train_test, date_time_to_string
 from metrics import antisem_metrics
 
 class Dataset(torch.utils.data.Dataset):
+    """
+    Pytorch related Dataset class
+    """
     def __init__(self, encodings, labels):
         self.encodings = encodings
         self.labels = labels
@@ -20,7 +23,7 @@ class Dataset(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.labels)
 
-def training(train_dataset,val_dataset,metric_title):
+def training(train_dataset, test_dataset, metric_title):
     final_metrics = list()
 
     training_args = TrainingArguments(
@@ -40,7 +43,7 @@ def training(train_dataset,val_dataset,metric_title):
         model=model,  # the instantiated 🤗 Transformers model to be trained
         args=training_args,  # training arguments, defined above
         train_dataset=train_dataset,  # training dataset
-        eval_dataset=val_dataset,  # evaluation dataset
+        eval_dataset=test_dataset,  # evaluation dataset
         compute_metrics=antisem_metrics
     )
 
@@ -61,12 +64,12 @@ def main(train_source):
     train_texts, test_texts, train_labels, test_labels = create_test_train(train_source)
 
 
-    train_encodings, val_encodings = tokenize_train_test(train_texts, test_texts)
+    train_encodings, test_encodings = tokenize_train_test(train_texts, test_texts)
     train_dataset = Dataset(train_encodings, train_labels)
-    val_dataset = Dataset(val_encodings, test_labels)
+    test_dataset = Dataset(test_encodings, test_labels)
 
     metric_title = date_time_to_string(datetime.now())
-    training(train_dataset,val_dataset,metric_title)
+    training(train_dataset,test_dataset,metric_title)
 
 
 #main("../data_train_without_keywords.csv")
