@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Classifier</title>
+  <link rel="stylesheet" href="static/frontpage.css">
+</head>
+{% extends "templates.html" %}
+{% block content %}
+<body>
+
+<body id="frontpageBody">
+
+    <div id="page-container">
+
+        <div id="content-wrap">
+            <h1 id="startscreen">Classifier</h1>
+            <h1 id="startscreen2">Test the classifier with your custom Text.</h1>
+            <form method="POST">
+                <label for="name">Type a Text and get a classification!</label>
+                <input type="text" id="name" name="input_string">
+                <button type="submit" class="dropbtn">Select</button>
+            </form>
+        </div>
+
+        <table id="thread-table">
+            {% for label, confidence in classification.items() %}
+            <tr>
+                <th> {{ label }} </th>
+                <td> {{ confidence }} </td>
+
+            </tr>
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+
+</body>
+{% endblock %}
+
+</html>
