@@ -25,8 +25,13 @@ class SubsetCreator():
 
         for comment_id in table:
             antisemitic_subset = {}
-            print("Comment ID: {}".format(comment_id))
-            print(table[comment_id])
+
+            try:
+                print("Comment ID: {}".format(comment_id))
+                print(table[comment_id])
+            except UnicodeEncodeError:
+                print("Not readable, pls sort in unsure")
+                print("!"*30)
 
             decision = self.decision()
 
