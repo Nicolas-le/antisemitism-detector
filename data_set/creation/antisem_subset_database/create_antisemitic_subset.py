@@ -28,6 +28,7 @@ class SubsetCreator():
 
             try:
                 print("Comment ID: {}".format(comment_id))
+                print("Keywords of post: {}".format(self.get_containing_keywords(table[comment_id])))
                 print(table[comment_id])
             except UnicodeEncodeError:
                 print("Not readable, pls sort in unsure")
@@ -110,6 +111,16 @@ class SubsetCreator():
 
         return kl_jewish + kl_middle_east + kl_slurs + kl_racist + kl_synonyms + kl_uncategorized
 
+    def get_containing_keywords(self, comment):
+        containing_keywords = []
+
+        for word in comment:
+            if word in self.keywords:
+                containing_keywords.append(word)
+            else:
+                continue
+
+        return ' '.join(list(set(containing_keywords)))
 
     def create_initial_subset(self):
         ID = 0
