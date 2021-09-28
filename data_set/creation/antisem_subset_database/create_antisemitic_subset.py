@@ -1,15 +1,15 @@
 from db_retrieve import DBRetrieval
-from pyfiglet import Figlet
+from utils import print_header, create_keywords, make_decision
 
 class SubsetCreator():
 
     def __init__(self):
         self.retrieval = DBRetrieval()
-        self.keywords = self.create_keywords()
+        self.keywords = create_keywords()
         self.last_entry = self.get_last_entry()
 
-    def main(self):
-        self.header()
+    def create_subset(self):
+        print_header(self.retrieval)
         inserted_counter = 0
 
         for table in self.retrieval.initial_subset.all()[self.last_entry+1:]:
@@ -34,7 +34,7 @@ class SubsetCreator():
                 print("Not readable, pls sort in unsure")
                 print("!"*30)
 
-            decision = self.decision()
+            decision = make_decision()
 
             if decision == 1:
                 antisemitic_subset[comment_id] = {
@@ -68,49 +68,6 @@ class SubsetCreator():
 
         return last_entry
 
-    def decision(self):
-        print("\n1 = antisem ; 0 = not antisem, 3 = unsure, 5 = break",flush=True)
-
-        try:
-            decision = int(input())
-        except ValueError:
-            print("No valid decision")
-            return 5
-
-        return decision
-
-    def header(self):
-        f = Figlet(font="slant")
-        print(f.renderText("FUCK ANTISEMITISM"))
-        print("Label the shit out of the comments!")
-        antisem = 0
-        nantisem = 0
-        unsure = 0
-
-        for comment in self.retrieval.antisemitic_subset.all():
-            for id in comment:
-                if comment[id]["label"] == 1:
-                    antisem += 1
-                elif comment[id]["label"] == 0:
-                    nantisem += 1
-                elif comment[id]["label"] == 3:
-                    unsure += 1
-
-        print("The Database contains...\n...comments, "
-              "labeled as antisemitic: {}\n...comments, labeled as not antisemitic: "
-              "{}\n...and comments, labeled as unsure: {}".format(antisem,nantisem,unsure))
-        print("_"*100)
-
-    def create_keywords(self):
-        kl_jewish = ["jew","jews","jewish","judaism","david"]
-        kl_middle_east = ["israel","zionist","zionists","palestinian","palestinians","nationalist","hamas","idf","gaza"]
-        kl_slurs = ["kike","kikes","shylock","zog","yid","zhyd","shyster","smouch","scapegoat","grug"]
-        kl_racist = ["nigger","niggers","racist","migrants"]
-        kl_synonyms = ["bankers","ngos","interests","globalist","greed","illuminati","nwo","academics","lobbyists"]
-        kl_uncategorized = ["hitler","holocaust","whites","sand","nazi","antisemitic","clannish","control","cowardice","creatures","(((echo)))","silencing","media"]
-
-        return kl_jewish + kl_middle_east + kl_slurs + kl_racist + kl_synonyms + kl_uncategorized
-
     def get_containing_keywords(self, comment):
         containing_keywords = []
 
@@ -122,33 +79,6 @@ class SubsetCreator():
 
         return ' '.join(list(set(containing_keywords)))
 
-    def create_initial_subset(self):
-        ID = 0
-
-        for thread_id, thread in self.retrieval.restructured_data_set.items():
-            keyword_comments = {}
-
-            print("ID: {}".format(ID))
-
-            if any([True for x in self.keywords if x in thread["initial_comment"]]):
-                keyword_comments[ID] = thread["initial_comment"]
-                ID += 1
-                self.retrieval.initial_subset.insert(keyword_comments)
-
-            for reply in thread["replies"]:
-                keyword_comments = {}
-                if any([True for x in self.keywords if x in reply["comment"]]):
-                    keyword_comments[ID] = reply["comment"]
-                    ID += 1
-                    self.retrieval.initial_subset.insert(keyword_comments)
-
-            if ID % 5000 == 0:
-
-                self.retrieval.restart_subset_db()
-
-        self.retrieval.initial_subset.close()
 
 
-creator = SubsetCreator()
-creator.main()
-#creator.create_initial_subset()
+
