@@ -6,8 +6,8 @@ from tinydb.middlewares import CachingMiddleware
 class DBRetrieval:
     def __init__(self,original_and_restuctured=False):
         self.antisemitic_subset = TinyDB('../../antisemitic_subset.json')
-        self.initial_subset = TinyDB("./initial_subset.json", storage=CachingMiddleware(JSONStorage))
-        self.non_kw_subset = TinyDB("./non_kw_subset.json", storage=CachingMiddleware(JSONStorage))
+        self.initial_subset = TinyDB("./initial_subsets/initial_kw_subset.json", storage=CachingMiddleware(JSONStorage))
+        self.non_kw_subset = TinyDB("./initial_subsets/initial_non_kw_subset.json", storage=CachingMiddleware(JSONStorage))
 
         if original_and_restuctured:
             self.original_database = TinyDB('../../4chan_pol_database.json')
