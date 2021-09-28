@@ -8,27 +8,26 @@ class Filler():
         self.keywords = create_keywords()
         self.last_entry = self.get_last_entry()
 
-
     def fill(self):
         print_header(self.retrieval)
         inserted_counter = 0
         comment_id = self.last_entry +1
-        count_to_comment_id = 0
 
-        for thread_id, thread in self.retrieval.restructured_data_set.items():
 
-            if count_to_comment_id == comment_id+1:
-                if not self.is_there_a_keyword(thread["initial_comment"]):
-                    if self.decide(comment_id,thread["initial_comment"]):
-                        inserted_counter += 1
-                        comment_id += 1
-                        count_to_comment_id += 1
-                    else:
-                        break
-            else:
-                count_to_comment_id += 1
+        for thread_id, thread in list(self.retrieval.restructured_data_set.items())[self.last_entry+1:]:
 
-        
+            if not self.is_there_a_keyword(thread["initial_comment"]):
+                decision = self.decide(comment_id,thread["initial_comment"])
+                if decision == "inserted":
+                    inserted_counter += 1
+                    comment_id += 1
+                elif decision == "leaving":
+                    break
+                elif decision == "notinserted":
+                    inserted_counter += 1
+                    comment_id += 1
+
+
         print("You have decided over {} comments in one session! Congrats! *_*".format(inserted_counter))
         print("#"*100)
         self.retrieval.antisemitic_subset.close()
@@ -52,14 +51,16 @@ class Filler():
 
         if decision == 0:
             self.insert(comment_id,comment,0)
+            print("-" * 80)
+            return "inserted"
         elif decision == 5:
             print("Exiting the Tool\nLast inserted comment ID: {}".format(int(comment_id) - 1))
-            return False
+            return "leaving"
         else:
-            print("Not inserted, because we are searching for non antisemitic comments.")
-
-        print("-" * 80)
-        return True
+            self.insert(comment_id, comment, 3)
+            print("Inserted to unsure, because we are searching for non antisemitic comments.")
+            print("-" * 80)
+            return "notinserted"
 
     def insert(self,comment_id,comment,label):
         tmp_dictionary_for_insertion = {}
@@ -73,6 +74,8 @@ class Filler():
 
     def get_last_entry(self):
         last_entry = self.retrieval.antisemitic_subset.get(doc_id=len(self.retrieval.antisemitic_subset))
+
+        print(last_entry)
         try:
             last_entry = int(list(last_entry.keys())[0])
         except AttributeError:
