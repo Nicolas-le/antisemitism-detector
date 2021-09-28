@@ -13,20 +13,26 @@ class Filler():
         print_header(self.retrieval)
         inserted_counter = 0
         comment_id = self.last_entry +1
+        count_to_comment_id = 0
 
         for thread_id, thread in self.retrieval.restructured_data_set.items():
 
-            if not self.is_there_a_keyword(thread["initial_comment"]):
-                if self.decide(comment_id,thread["initial_comment"]):
-                    inserted_counter += 1
-                    comment_id += 1
-                else:
-                    break
+            if count_to_comment_id == comment_id+1:
+                if not self.is_there_a_keyword(thread["initial_comment"]):
+                    if self.decide(comment_id,thread["initial_comment"]):
+                        inserted_counter += 1
+                        comment_id += 1
+                        count_to_comment_id += 1
+                    else:
+                        break
+            else:
+                count_to_comment_id += 1
 
-
+        
         print("You have decided over {} comments in one session! Congrats! *_*".format(inserted_counter))
         print("#"*100)
         self.retrieval.antisemitic_subset.close()
+
 
     def is_there_a_keyword(self,comment):
         if any([True for x in self.keywords if x in comment]):
