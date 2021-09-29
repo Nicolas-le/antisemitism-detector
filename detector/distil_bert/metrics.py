@@ -12,11 +12,11 @@ def antisem_metrics(pred: EvalPrediction):
 
     mapper = lambda n: True if n == 1 else False
 
-    hatePreds = preds[[mapper(l) for l in labels]]
-    noHatePreds = preds[[mapper(l) for l in 1 - labels]]
+    antisem_preds = preds[[mapper(l) for l in labels]]
+    no_antisem_preds = preds[[mapper(l) for l in 1 - labels]]
 
     return {
-      'acc_antisemitism': accuracy_score(hatePreds, np.ones_like(hatePreds)),
-      'acc_notantisemitism': accuracy_score(noHatePreds, np.zeros_like(noHatePreds)),
+      'acc_antisemitism': accuracy_score(antisem_preds, np.ones_like(antisem_preds)),
+      'acc_notantisemitism': accuracy_score(no_antisem_preds, np.zeros_like(no_antisem_preds)),
       'acc_all': accuracy_score(labels, preds),
     }
