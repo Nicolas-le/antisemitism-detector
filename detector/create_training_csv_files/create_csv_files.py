@@ -55,13 +55,13 @@ def skip_unsure_labels(label):
 def main():
     database = TinyDB('../data_set/antisemitic_subset.json')
 
-    with open("../data_train.csv", 'w') as path:
+    with open("data_train.csv", 'w') as path:
         create_train_with_keywords(path, database)
 
-    with open("../data_train_without_all_keywords.csv", 'w') as path:
+    with open("data_train_without_all_keywords.csv", 'w') as path:
         create_train_without_all_keywords(path, database)
 
-    with open("../data_train_without_slur_keywords.csv", 'w') as path:
+    with open("data_train_without_slur_keywords.csv", 'w') as path:
         create_train_without_slur_keywords(path, database)
 
 
