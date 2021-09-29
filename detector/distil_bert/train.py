@@ -3,6 +3,7 @@ import torch
 from torch.utils.data import DataLoader
 import pandas as pd
 from datetime import datetime
+import os
 
 from util import create_test_train, tokenize_train_test, date_time_to_string
 from metrics import antisem_metrics
@@ -23,12 +24,12 @@ class Dataset(torch.utils.data.Dataset):
     def __len__(self):
         return len(self.labels)
 
-def training(train_dataset, test_dataset, metric_title):
+def training(train_dataset, test_dataset, metric_title,model_directory,number_of_epochs=4):
     final_metrics = list()
 
     training_args = TrainingArguments(
         output_dir='./results',  # output directory
-        num_train_epochs=3,  # total number of training epochs
+        num_train_epochs=number_of_epochs,  # total number of training epochs
         per_device_train_batch_size=16,  # batch size per device during training
         per_device_eval_batch_size=64,  # batch size for evaluation
         warmup_steps=500,  # number of warmup steps for learning rate scheduler
@@ -48,7 +49,7 @@ def training(train_dataset, test_dataset, metric_title):
     )
 
     trainer.train()
-    trainer.save_model("./models")
+    trainer.save_model(model_directory)
     evaluation_metrics = trainer.evaluate()
     train_loss: float = trainer.evaluate(train_dataset)['eval_loss']
 
@@ -57,10 +58,10 @@ def training(train_dataset, test_dataset, metric_title):
     )
 
     metrics_dataframe = pd.DataFrame(final_metrics)
-    metrics_dataframe.to_csv("./saved_metrics/distil_bert_"+metric_title+".csv", sep='\t')
+    metrics_dataframe.to_csv("./saved_metrics/distil_bert_epochs_"+ str(number_of_epochs) + "_" +metric_title+".csv")
 
 
-def main(train_source):
+def main(train_source, input_information):
     train_texts, test_texts, train_labels, test_labels = create_test_train(train_source)
 
 
@@ -68,9 +69,13 @@ def main(train_source):
     train_dataset = Dataset(train_encodings, train_labels)
     test_dataset = Dataset(test_encodings, test_labels)
 
-    metric_title = date_time_to_string(datetime.now())
-    training(train_dataset,test_dataset,metric_title)
+    model_directory = "./models/"+ input_information + date_time_to_string(datetime.now())
+    os.mkdir(model_directory)
+
+    metric_title = input_information + date_time_to_string(datetime.now())
+    training(train_dataset,test_dataset,metric_title,model_directory)
 
 
-#main("../data_train_without_keywords.csv")
-main("../data_train.csv")
+main("../data_train_without_keywords.csv","without_all_keywords")
+main()
+#main("../data_train.csv")

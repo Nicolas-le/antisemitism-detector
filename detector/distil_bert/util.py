@@ -34,4 +34,4 @@ def tokenize_train_test(train_texts, test_texts):
     return train_encodings, test_encodings
 
 def date_time_to_string(datetime):
-    return datetime.strftime("%d/%m/%Y_%H:%M:%S")
+    return datetime.strftime("%d_%m_%Y_%H_%M_%S")
