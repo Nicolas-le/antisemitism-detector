@@ -9,25 +9,25 @@ Learn linguistic features of antisemitic language.
 
 subset labeled antisem/ not antisem
 
-### pre analysis
+## File Structure
 
-1. time and posts
-2. topics
-3. simple counts (keywords, slurs, etc.)
-   Wortverteilungen
-4. potential subset
-
-
-## Algorithm: SVM with NLP features
-
-### Naive Bayes
-
-### sentence vectors (similar to word vectors with spacy)
-https://stackoverflow.com/questions/29760935/how-to-get-vector-for-a-sentence-from-the-word2vec-of-tokens-in-sentence
-
-### word co-occurrences
-
-### sentiment around keywords
-
-### topic signal modeling
-
+```
+antisemitism-detector
+|   README.md
+|
+└──── data_set
+|     |     4chan_pol_database.json
+|     |         - the complete scraped dataset after preprocessing
+|     |     antisemitic_subset.json
+|     |         - the labeled subset (1500: antisem, 1500: not antisem)
+|     |     detections_4chan_pol_database.json
+|     |         - aggregated analysis and insights of the "4chan_pol_database.json" database, used for the analysis app
+|     |     
+|     └──── anaconda_envs
+|     |     |   antisem_detector.yml
+|     |     |   data_analysi
+|     |
+|     |
+|     |
+|     |
+```
