@@ -1,38 +1,23 @@
 import pandas as pd
-import re
-from spacy.lang.en import English
-from spacy.attrs import LOWER
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score, f1_score
 
-sms_spam = pd.read_csv('../data_train.csv')
+from nltk import word_tokenize
 
-# split training and test set
+def prepare_dataset(path):
+    dataset = pd.read_csv(path)
+    return train_test_split(dataset,test_size=0.2,random_state=42)
 
-# Randomize the dataset
-data_randomized = sms_spam.sample(frac=1, random_state=1)
-
-# Calculate index for split
-training_test_index = round(len(data_randomized) * 0.8)
-
-# Split into training and test sets
-training_set = data_randomized[:training_test_index].reset_index(drop=True)
-test_set = data_randomized[training_test_index:].reset_index(drop=True)
-
-
-def create_word_list(messages):
+def create_word_list(X_train):
     word_list = []
-    for message in messages:
-        # tokenize
-        [word_list.append(token.text) for token in message]
+    for index, row in X_train.iterrows():
+        try:
+            tokens = word_tokenize(row['text'])
+        except TypeError:
+            continue
+        [word_list.append(token) for token in tokens]
 
     return word_list
-
-unique_word_list = list(dict.fromkeys(create_word_list(training_set["text"])))
-
-# create word lists containing all the appearing words for spam and ham messages
-spam_word_list = create_word_list(training_set[training_set.Label == "antisemitic"]["text"])
-ham_word_list = create_word_list(training_set[training_set.Label == "notantisemitic"]["text"])
-unsure_word_list = create_word_list(training_set[training_set.Label == "unsure"]["text"])
-
 
 def create_word_occ_dict(unique_word_list, word_list):
     smoothing = 1
@@ -48,3 +33,80 @@ def create_word_occ_dict(unique_word_list, word_list):
         word_occ_dict[word.lower()] = p_word_given_word_list
 
     return word_occ_dict
+
+def naive_bayes(text, probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict):
+    tokens = word_tokenize(text)
+    """
+    try:
+        tokens = word_tokenize(text)
+    except TypeError:
+        text.decode('ascii', 'ignore')
+        tokens = word_tokenize(text)
+    """
+
+    p_message_is_antisemitic = probability_antisemitic
+    p_message_is_notantisemitic = probability_nonantisemitic
+
+    for word in tokens:
+        if not word in antisemitic_dict:
+            continue
+
+        p_message_is_antisemitic *= antisemitic_dict.get(word)
+
+    for word in tokens:
+        if not word in non_antisemitic_dict:
+            continue
+
+        p_message_is_notantisemitic *= non_antisemitic_dict.get(word)
+
+    if p_message_is_antisemitic > p_message_is_notantisemitic:
+        return 1
+    elif p_message_is_antisemitic < p_message_is_notantisemitic:
+        return 0
+
+
+def get_accuracy(test,probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict):
+    test['predicted'] = test['text'].apply(naive_bayes,args=(probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict))
+
+    correct = 0
+    total = test.shape[0]
+
+    for row in test.iterrows():
+        row = row[1]
+        if row['label'] == row['predicted']:
+            correct += 1
+
+    return correct/total
+
+def get_metrics(test,probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict):
+    test['predicted'] = test['text'].apply(naive_bayes,args=(probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict))
+
+    y_pred = test["predicted"]
+    y_true = test["label"]
+
+    return f1_score(y_true,y_pred)
+
+
+
+def main():
+    train, test = prepare_dataset("../data_train.csv")
+
+    unique_word_list =list(dict.fromkeys(create_word_list(train)))
+
+    antisemitic_word_list = create_word_list(train[train.label == 1])
+    non_antisemitic_word_list = create_word_list(train[train.label == 0])
+
+    antisemitic_dict = create_word_occ_dict(unique_word_list, antisemitic_word_list)
+    non_antisemitic_dict = create_word_occ_dict(unique_word_list, non_antisemitic_word_list)
+
+    probability_antisemitic = train['label'].value_counts(normalize=True)[1]
+    probability_nonantisemitic = train['label'].value_counts(normalize=True)[0]
+
+
+    #accuracy = get_accuracy(test,probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict)
+    #print(accuracy)
+    metrics = get_metrics(test,probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict)
+
+    print(metrics)
+
+main()
