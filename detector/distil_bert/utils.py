@@ -1,5 +1,3 @@
-import csv
-from sklearn.model_selection import train_test_split
 from transformers import DistilBertTokenizerFast
 import pandas as pd
 
@@ -26,22 +24,6 @@ def create_test_train(train_csv,test_csv):
     test_labels = test["label"].tolist()
 
     return train_texts, test_texts, train_labels, test_labels
-
-    """
-    with open(train_csv, newline='',encoding="utf8") as csv_file:
-        reader = csv.DictReader(csv_file)
-        texts, labels = [], []
-
-
-        for row in reader:
-            #print(row)
-
-            texts.append(row["text"])
-            labels.append(int(row["label"]))
-
-    return train_test_split(texts, labels, test_size=.2)
-    """
-
 
 
 def tokenize_train_test(train_texts, test_texts):

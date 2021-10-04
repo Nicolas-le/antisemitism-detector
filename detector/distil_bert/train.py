@@ -28,23 +28,23 @@ def training(train_dataset, test_dataset, metric_title,model_directory,number_of
     final_metrics = list()
 
     training_args = TrainingArguments(
-        output_dir='./training/results',  # output directory
-        num_train_epochs=number_of_epochs,  # total number of training epochs
-        per_device_train_batch_size=16,  # batch size per device during training
-        per_device_eval_batch_size=64,  # batch size for evaluation
-        warmup_steps=500,  # number of warmup steps for learning rate scheduler
-        weight_decay=0.01,  # strength of weight decay
-        logging_dir='./training/logs',  # directory for storing logs
+        output_dir='./training/results',
+        num_train_epochs=number_of_epochs,
+        per_device_train_batch_size=16,
+        per_device_eval_batch_size=64,
+        warmup_steps=500,
+        weight_decay=0.01,
+        logging_dir='./training/logs',
         logging_steps=10,
     )
 
     model = DistilBertForSequenceClassification.from_pretrained("distilbert-base-uncased")
 
     trainer = Trainer(
-        model=model,  # the instantiated 🤗 Transformers model to be trained
-        args=training_args,  # training arguments, defined above
-        train_dataset=train_dataset,  # training dataset
-        eval_dataset=test_dataset,  # evaluation dataset
+        model=model,
+        args=training_args,
+        train_dataset=train_dataset,
+        eval_dataset=test_dataset,
         compute_metrics=antisem_metrics
     )
 
@@ -62,7 +62,6 @@ def training(train_dataset, test_dataset, metric_title,model_directory,number_of
 
 def main(train_csv,test_csv, input_information):
     train_texts, test_texts, train_labels, test_labels = create_test_train(train_csv,test_csv)
-
 
     train_encodings, test_encodings = tokenize_train_test(train_texts, test_texts)
     train_dataset = Dataset(train_encodings, train_labels)

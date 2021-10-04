@@ -2,7 +2,6 @@ from transformers import DistilBertTokenizerFast, DistilBertForSequenceClassific
 from transformers import pipeline
 from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, precision_recall_fscore_support
 import pandas as pd
-from sklearn.model_selection import train_test_split
 from saved_metrics.confusion_matrix import make_confusion_matrix
 
 
@@ -15,8 +14,10 @@ def classifier(model_path):
     return classifier
 
 def prepare_dataset(path):
-    dataset = pd.read_csv(path)
-    return train_test_split(dataset,test_size=0.2,random_state=42)
+    test = pd.read_csv(path)
+    test['text'] = test['text'].apply(lambda x: str(x))
+    test['label'] = test["label"].apply(lambda x: int(x))
+    return test
 
 def classify(sentence):
 
@@ -28,7 +29,7 @@ def classify(sentence):
         return 1
 
 def get_metrics(y_true,y_pred):
-    return {"f1_score": f1_score(y_true,y_pred),
+    return {"f1_score": f1_score(y_true,y_pred,average="micro"),
             "accuracy": accuracy_score(y_true,y_pred),
             "confusion_matrix": confusion_matrix(y_true,y_pred),
             "prec_rec_fscore": precision_recall_fscore_support(y_true,y_pred)
@@ -37,15 +38,17 @@ def get_metrics(y_true,y_pred):
 
 def plot_matrix(matrix,matrix_path):
     labels = ["True Neg","False Pos","False Neg","True Pos"]
-    categories = ["antisemitisch","nicht antisemitisch"]
+    categories = ["nicht antisemitisch","antisemitisch"]
     make_confusion_matrix(matrix,group_names=labels,categories=categories,cmap="binary",save_path=matrix_path)
 
 
 if __name__ == "__main__":
-    model_path = "./models/with_keywords/28_09_2021_19_34_44"
-    antisem_classifier = classifier(model_path )
+    #model_path = "./models/without_slur_keywords/29_09_2021_15_33_26"
+    #model_path = "./models/with_keywords/28_09_2021_19_34_44"
+    model_path = "./models/without_all_keywords/04_10_2021_16_25_23"
+    antisem_classifier = classifier(model_path)
 
-    train, test = prepare_dataset("../data_train.csv")
+    test = prepare_dataset("../data_without_all_keywords_test.csv")
 
     test['predicted'] = test['text'].apply(classify)
     y_pred = test["predicted"]
@@ -55,8 +58,8 @@ if __name__ == "__main__":
     metrics = get_metrics(y_true,y_pred)
     print(metrics)
 
-    matrix_path = "./saved_metrics/confusion_matrix_with_all_keywords.png"
-    #plot_matrix(metrics["confusion_matrix"],matrix_path)
+    matrix_path = "./saved_metrics/confusion_matrix_without_all_keywords.png"
+    plot_matrix(metrics["confusion_matrix"],matrix_path)
 
 
 
