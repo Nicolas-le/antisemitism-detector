@@ -91,7 +91,7 @@ def make_confusion_matrix(cf,
         categories = False
 
     # MAKE THE HEATMAP VISUALIZATION
-    plt.figure(figsize=figsize)
+    plt.figure(figsize=figsize, dpi=300)
     sns.heatmap(cf, annot=box_labels, fmt="", cmap=cmap, cbar=cbar, xticklabels=categories, yticklabels=categories)
 
     if xyplotlabels:
