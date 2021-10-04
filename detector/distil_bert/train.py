@@ -60,8 +60,8 @@ def training(train_dataset, test_dataset, metric_title,model_directory,number_of
     metrics_dataframe = pd.DataFrame(final_metrics)
     metrics_dataframe.to_csv("./saved_metrics/distil_bert_epochs_"+ str(number_of_epochs) + "_" +metric_title+".csv")
 
-def main(train_source, input_information):
-    train_texts, test_texts, train_labels, test_labels = create_test_train(train_source)
+def main(train_csv,test_csv, input_information):
+    train_texts, test_texts, train_labels, test_labels = create_test_train(train_csv,test_csv)
 
 
     train_encodings, test_encodings = tokenize_train_test(train_texts, test_texts)
@@ -75,9 +75,13 @@ def main(train_source, input_information):
     training(train_dataset,test_dataset,metric_title,model_directory)
 
 input_information = "without_all_keywords"
-main("../data_train_without_all_keywords.csv",input_information)
+train_csv, test_csv = "../data_without_all_keywords_train.csv", "../data_without_all_keywords_test.csv"
+main(train_csv, test_csv, input_information)
 
 input_information = "without_slur_keywords"
-main("../data_train_without_slur_keywords.csv",input_information)
+train_csv, test_csv = "../data_without_slur_keywords_train.csv", "../data_without_slur_keywords_test.csv"
+main(train_csv, test_csv, input_information)
 
-#main("../data_train.csv")
+input_information = "with_keywords"
+train_csv, test_csv = "../data_train.csv", "../data_test.csv"
+main(train_csv, test_csv, input_information)
