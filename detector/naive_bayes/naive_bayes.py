@@ -1,12 +1,13 @@
 import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score, f1_score
-
+from sklearn.metrics import accuracy_score, f1_score, confusion_matrix, precision_recall_fscore_support
 from nltk import word_tokenize
 
 def prepare_dataset(path):
-    dataset = pd.read_csv(path)
-    return train_test_split(dataset,test_size=0.2,random_state=42)
+    df = pd.read_csv(path)
+    df["text"] = df["text"].apply(lambda x: str(x))
+    df["label"] = df["label"].apply(lambda x: int(x))
+
+    return df
 
 def create_word_list(X_train):
     word_list = []
@@ -27,8 +28,8 @@ def create_word_occ_dict(unique_word_list, word_list):
 
     for word in unique_word_list:
         n_word_given_word_list = word_list.count(word)
-        p_word_given_word_list = (n_word_given_word_list + smoothing) / (
-                    word_list_length + smoothing * unique_list_length)
+        p_word_given_word_list = (n_word_given_word_list + smoothing) / \
+                                 (word_list_length + smoothing * unique_list_length)
 
         word_occ_dict[word.lower()] = p_word_given_word_list
 
@@ -36,13 +37,6 @@ def create_word_occ_dict(unique_word_list, word_list):
 
 def naive_bayes(text, probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict):
     tokens = word_tokenize(text)
-    """
-    try:
-        tokens = word_tokenize(text)
-    except TypeError:
-        text.decode('ascii', 'ignore')
-        tokens = word_tokenize(text)
-    """
 
     p_message_is_antisemitic = probability_antisemitic
     p_message_is_notantisemitic = probability_nonantisemitic
@@ -63,33 +57,19 @@ def naive_bayes(text, probability_antisemitic, probability_nonantisemitic, antis
         return 1
     elif p_message_is_antisemitic < p_message_is_notantisemitic:
         return 0
+    else:
+        return 3
 
-
-def get_accuracy(test,probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict):
-    test['predicted'] = test['text'].apply(naive_bayes,args=(probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict))
-
-    correct = 0
-    total = test.shape[0]
-
-    for row in test.iterrows():
-        row = row[1]
-        if row['label'] == row['predicted']:
-            correct += 1
-
-    return correct/total
-
-def get_metrics(test,probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict):
-    test['predicted'] = test['text'].apply(naive_bayes,args=(probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict))
-
-    y_pred = test["predicted"]
-    y_true = test["label"]
-
-    return f1_score(y_true,y_pred)
-
-
+def get_metrics(y_true,y_pred):
+    return {"f1_score": f1_score(y_true,y_pred,average="micro"),
+            "accuracy": accuracy_score(y_true,y_pred),
+            "confusion_matrix": confusion_matrix(y_true,y_pred),
+            "prec_rec_fscore": precision_recall_fscore_support(y_true,y_pred)
+    }
 
 def main():
-    train, test = prepare_dataset("../data_train.csv")
+    train = prepare_dataset("../data_without_slur_keywords_train.csv")
+    test = prepare_dataset("../data_without_slur_keywords_test.csv")
 
     unique_word_list =list(dict.fromkeys(create_word_list(train)))
 
@@ -102,11 +82,12 @@ def main():
     probability_antisemitic = train['label'].value_counts(normalize=True)[1]
     probability_nonantisemitic = train['label'].value_counts(normalize=True)[0]
 
+    test["predicted"] = test["text"].apply(naive_bayes,args=(probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict))
 
-    #accuracy = get_accuracy(test,probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict)
-    #print(accuracy)
-    metrics = get_metrics(test,probability_antisemitic, probability_nonantisemitic, antisemitic_dict, non_antisemitic_dict)
+    y_pred = test["predicted"]
+    y_true = test["label"]
 
+    metrics = get_metrics(y_true,y_pred)
     print(metrics)
 
 main()
