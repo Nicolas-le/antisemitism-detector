@@ -31,8 +31,11 @@ def home():
     thread_id = request.form.get('fname')
 
     if thread_id:
-        thread = retrieval.get_thread(int(thread_id))[0]
-        thread = get_topics_initial_comment(empath_lex,thread)
+        try:
+            thread = retrieval.get_thread(int(thread_id))[0]
+            thread = get_topics_initial_comment(empath_lex,thread)
+        except IndexError:
+            thread = {}
     else:
         thread = {}
     return render_template('home.html', thread=thread)
