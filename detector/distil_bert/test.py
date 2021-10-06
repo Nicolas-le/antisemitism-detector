@@ -36,19 +36,19 @@ def get_metrics(y_true,y_pred):
 
     }
 
-def plot_matrix(matrix,matrix_path):
+def plot_matrix(matrix,matrix_path,title):
     labels = ["True Neg","False Pos","False Neg","True Pos"]
     categories = ["nicht antisemitisch","antisemitisch"]
-    make_confusion_matrix(matrix,group_names=labels,categories=categories,cmap="binary",save_path=matrix_path)
+    make_confusion_matrix(matrix,group_names=labels,categories=categories,cmap="binary",save_path=matrix_path,title=title)
 
 
 if __name__ == "__main__":
-    #model_path = "./models/without_slur_keywords/29_09_2021_15_33_26"
-    #model_path = "./models/with_keywords/28_09_2021_19_34_44"
-    model_path = "./models/without_all_keywords/04_10_2021_16_25_23"
+    model_path = "./models/without_slur_keywords/04_10_2021_20_20_23"
+    #model_path = "./models/with_keywords/05_10_2021_10_46_14"
+    #model_path = "./models/without_all_keywords/04_10_2021_16_25_23"
     antisem_classifier = classifier(model_path)
 
-    test = prepare_dataset("../data_without_all_keywords_test.csv")
+    test = prepare_dataset("../data_without_slur_keywords_test.csv")
 
     test['predicted'] = test['text'].apply(classify)
     y_pred = test["predicted"]
@@ -58,8 +58,9 @@ if __name__ == "__main__":
     metrics = get_metrics(y_true,y_pred)
     print(metrics)
 
-    matrix_path = "./saved_metrics/confusion_matrix_without_all_keywords.png"
-    plot_matrix(metrics["confusion_matrix"],matrix_path)
+    title = "Ohne Slur-Schlüsselworte"
+    matrix_path = "./saved_metrics/confusion_matrix_without_slur_keywords.png"
+    plot_matrix(metrics["confusion_matrix"],matrix_path,title)
 
 
 

@@ -73,13 +73,13 @@ def main(train_csv,test_csv, input_information):
 
     training(train_dataset,test_dataset,metric_title,model_directory)
 
-input_information = "without_all_keywords"
-train_csv, test_csv = "../data_without_all_keywords_train.csv", "../data_without_all_keywords_test.csv"
-main(train_csv, test_csv, input_information)
+#input_information = "without_all_keywords"
+#train_csv, test_csv = "../data_without_all_keywords_train.csv", "../data_without_all_keywords_test.csv"
+#main(train_csv, test_csv, input_information)
 
-input_information = "without_slur_keywords"
-train_csv, test_csv = "../data_without_slur_keywords_train.csv", "../data_without_slur_keywords_test.csv"
-main(train_csv, test_csv, input_information)
+#input_information = "without_slur_keywords"
+#train_csv, test_csv = "../data_without_slur_keywords_train.csv", "../data_without_slur_keywords_test.csv"
+#main(train_csv, test_csv, input_information)
 
 input_information = "with_keywords"
 train_csv, test_csv = "../data_train.csv", "../data_test.csv"

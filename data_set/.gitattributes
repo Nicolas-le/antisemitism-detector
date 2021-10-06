@@ -1,0 +1,2 @@
+4chan_pol_database.json filter=lfs diff=lfs merge=lfs -text
+antisemitic_subset.json filter=lfs diff=lfs merge=lfs -text
