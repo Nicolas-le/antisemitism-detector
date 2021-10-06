@@ -23,8 +23,13 @@
             </form>
         </div>
 
+        {% for title, prediction in predictions %}
+
         <table id="thread-table">
-            {% for label, confidence in classification.items() %}
+
+            <h3>{{title}}</h3>
+
+            {% for label, confidence in prediction.items() %}
             <tr>
                 <th> {{ label }} </th>
                 <td> {{ confidence }} </td>
@@ -33,6 +38,8 @@
             {% endfor %}
 
         </table>
+
+        {% endfor %}
 
     </div>
 

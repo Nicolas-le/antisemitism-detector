@@ -1,16 +1,16 @@
 import json, plotly
 
-def preprocess_classification(classification):
+def preprocess_classification(prediction, title):
     final_dict = {}
 
-    if classification["label"] == "LABEL_1":
+    if prediction["label"] == "LABEL_1":
         final_dict["label"] = "Antisemitic"
-        final_dict["confidence"] = str(round(classification["score"], 2)*100) +"%"
+        final_dict["confidence"] = str(round(prediction["score"], 2) * 100) + "%"
     else:
         final_dict["label"] = "Not antisemitic"
-        final_dict["confidence"] = str(round(classification["score"], 2)*100) +"%"
+        final_dict["confidence"] = str(round(prediction["score"], 2) * 100) + "%"
 
-    return final_dict
+    return (title, final_dict)
 
 
 def split_into_list(string):

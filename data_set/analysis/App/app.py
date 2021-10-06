@@ -15,15 +15,17 @@ retrieval = DBRetrieval()
 spacy_en_core = spacy.load('en_core_web_sm')
 empath_lex = Empath()
 
-def get_classifier():
-    model_name = "./App/classifier_model"
+def get_classifier(model_path):
+    model_name = model_path
     model = DistilBertForSequenceClassification.from_pretrained(model_name)
     tokenizer = DistilBertTokenizerFast.from_pretrained('distilbert-base-uncased')
     classifier = pipeline('text-classification', model=model, tokenizer=tokenizer)
 
     return classifier
 
-antisem_classifier = get_classifier()
+classifier_with_kws = get_classifier("./App/classifier_models/trained_with_kws")
+classifier_without_all_kws = get_classifier("./App/classifier_models/trained_without_all_kws")
+classifier_without_slur_kws = get_classifier("./App/classifier_models/trained_without_slur_kws")
 
 @app.route("/", methods=['POST',"GET"])
 def home():
@@ -70,14 +72,15 @@ def keyword():
 @app.route("/classifier", methods=['POST',"GET"])
 def classifier():
     input_string = request.form.get('input_string')
+    predictions = []
 
     if input_string is not None:
-        classification = preprocess_classification(antisem_classifier(input_string)[0])
-    else:
-        classification = {"label":"","confidence":""}
+        predictions.append(preprocess_classification(classifier_with_kws(input_string)[0],"Training with keywords"))
+        predictions.append(preprocess_classification(classifier_without_all_kws(input_string)[0],"Training without keywords"))
+        predictions.append(preprocess_classification(classifier_without_slur_kws(input_string)[0],"Training without slur keywords"))
 
 
-    return render_template('classifier.html', classification=classification)
+    return render_template('classifier.html', predictions=predictions)
 
 
 @app.context_processor
