@@ -12,12 +12,10 @@ def get_dataframe(path):
 def classify_text(text):
     tokens = word_tokenize(text)
 
-    # if there are slurs, immediately classified as antisem
     if any([True for token in tokens if token in keywords.keyword.values]):
         return True
     else:
         return False
-
 
 def get_metrics(y_true,y_pred):
     return {"f1_score": f1_score(y_true,y_pred),
@@ -30,7 +28,6 @@ def main():
     test = get_dataframe("../data_test.csv")
 
     test["predicted"] = test["text"].apply(classify_text)
-
     y_pred = test["predicted"]
     y_true = test["label"]
 
