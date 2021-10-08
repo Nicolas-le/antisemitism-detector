@@ -1,5 +1,5 @@
 from apiclient.discovery import build
-import csv
+import csv, json
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -42,21 +42,19 @@ def iterate_process_videos(video_ids_csv,service):
             "top_level_comments": top_level_comments
         }
 
-    print(all_info_dict)
+    return all_info_dict
 
 def main():
-    # you only need to build the service once
-    service = build_service('api_cred.json')
+    video_list_title = "al_jazeera"
 
-    with open("video_ids.csv") as csv_file:
+    service = build_service('./resources/api_cred.json')
+
+    with open("./resources/video_ids_"+video_list_title+".csv") as csv_file:
         video_ids_csv = csv.reader(csv_file)
-        iterate_process_videos(video_ids_csv,service)
+        all_video_dict = iterate_process_videos(video_ids_csv,service)
 
-
-
-
-
-
+    with open("./resources/collected_comments_"+video_list_title+".json", 'w') as file:
+        json.dump(all_video_dict , file)
 
 main()
 
