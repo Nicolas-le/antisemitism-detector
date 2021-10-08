@@ -44,8 +44,7 @@ def iterate_process_videos(video_ids_csv,service):
 
     return all_info_dict
 
-def main():
-    video_list_title = "al_jazeera"
+def main(video_list_title):
 
     service = build_service('./resources/api_cred.json')
 
@@ -56,5 +55,8 @@ def main():
     with open("./resources/collected_comments_"+video_list_title+".json", 'w') as file:
         json.dump(all_video_dict , file)
 
-main()
+#main("corey_israel")
+#main("corey_palestinian")
+main("corey_whole")
+
 
