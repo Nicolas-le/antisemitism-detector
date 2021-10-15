@@ -68,8 +68,8 @@ def get_metrics(y_true,y_pred):
     }
 
 def main():
-    train = prepare_dataset("../data_without_slur_keywords_train.csv")
-    test = prepare_dataset("../data_without_slur_keywords_test.csv")
+    train = prepare_dataset("../data_train.csv")
+    test = prepare_dataset("../data_test.csv")
 
     unique_word_list =list(dict.fromkeys(create_word_list(train)))
 
