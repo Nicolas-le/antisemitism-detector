@@ -19,6 +19,19 @@ antisemitism-detector
 |     |     antisem_detector.yml
 |     |     data_analysis_app.yml
 |
+└──── case_study
+|     |     classify_comment.py
+|     |     plotting.py
+|     |     youtube_api.py
+|     |
+|     └──── resources
+|     |     |       collected_comments_corey_israel.json
+|     |     |       collected_comments_corey_palestinian.json
+|     |     |       collected_comments_corey_whole.json
+|     |     |       collected_comments_corey_israel.json
+|     |     |       collected_comments_corey_palestinian.json
+|     |     |       collected_comments_corey_whole.json
+|         
 └──── data_set
 |     |     4chan_pol_database.json
 |     |         - the complete scraped dataset after preprocessing
