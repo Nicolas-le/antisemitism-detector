@@ -1,19 +1,22 @@
 import requests as r
 import json
-from tinydb import TinyDB, Query
+from tinydb import TinyDB
 from tinydb.storages import JSONStorage
 from tinydb.middlewares import CachingMiddleware
-from tinydb.operations import add, delete
 from time import time, sleep
 import data_cleaner
 import spacy
+import sys
 
 
 def get_IDs():
-    # iterating over thread_IDs_file and call get_thread_json() every second
-    with open('pol_archive_thread_IDs.json') as thread_IDs_file:
-        thread_IDs = json.load(thread_IDs_file)
-        return thread_IDs  
+    try:
+        with open('pol_archive_thread_IDs.json') as thread_IDs_file:
+            thread_IDs = json.load(thread_IDs_file)
+            return thread_IDs
+    except (FileNotFoundError, IOError):
+        print("pol_archive_thread_IDs.json is missing. Exiting...")
+        sys.exit()
 
 def get_thread_Json(thread_ID,tokenizer):
 
@@ -23,6 +26,7 @@ def get_thread_Json(thread_ID,tokenizer):
     except r.exceptions.RequestException as e:
        return False
 
+    # checks sanity and applies preprocessing
     thread = thread_sanity_check(thread,tokenizer)
     return thread
 
@@ -49,6 +53,12 @@ def thread_sanity_check(thread,tokenizer):
    
 
 def preprocess_json(thread_json,tokenizer):
+    """
+    Split the collected json into the dictionary which we want to insert into the db.
+    :param thread_json: The collected thread as json
+    :param tokenizer:   The initialized tokenizer object.
+    :return:    returns a the preprocessed json as a dictionary
+    """
     def handle_replies(posts,tokenizer):
         output_list = []
         for post in posts:
@@ -79,24 +89,38 @@ def store_to_db(db, preprocessed_json):
     db.insert(preprocessed_json)
 
 def main():
+    # Create the database using tiny DB.
     db = TinyDB('../4chan_pol_database.json', storage=CachingMiddleware(JSONStorage))
     thread_IDs = get_IDs()
 
-    last_element_previous_list = 321324355
+    # get the thread ID of the last element of the previous list of thread IDs
+    try:
+        last_element_previous_list = int(sys.argv[1])
+    except IndexError:
+        print("You haven't inserted a thread ID. Restart with threadID or otherwise the script won't stop at a certain ID\n"
+            "provoking possible data duplications.")
+        last_element_previous_list = 0
+    except ValueError:
+        print("Your thread ID is not a number. Exiting ...")
+        sys.exit()
 
     thread_counter = 0
     first_fail = True
 
+    # initialize tokenizer object -> spacy
     tokenizer = spacy.load("en_core_web_sm")
 
+    # loop in reverse from newest thread to oldest
     for thread_ID in reversed(thread_IDs):
-        
+
+        # in case you reach the last ID of your last scraping session
         if thread_ID == last_element_previous_list:
             print("All new Posts have been scraped. Exiting...")
             break
 
         preprocessed_thread = get_thread_Json(thread_ID,tokenizer)
 
+        # if one catching fails the next ID you be tried before exiting the script-.
         if not preprocessed_thread:
             if first_fail:
                 print("Thread %d isn't available anymore. Trying one more...\n" % thread_ID)
@@ -112,6 +136,8 @@ def main():
             print(thread_counter,flush=True)
 
         thread_counter += 1
+
+        # the API allows only one request per second, so a timer is applied.
         sleep(1.5 - time() % 1.5)
 
     db.close()
