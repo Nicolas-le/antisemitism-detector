@@ -1,2 +1,0 @@
-	eval_train_loss	eval_loss	            eval_accAntisem	    eval_accNoAntisem	eval_accAll	        eval_runtime	eval_samples_per_second	eval_steps_per_second	epoch
-0	0.10028016567230225	0.22827090322971344	0.967741935483871	0.8982035928143712	0.9278350515463918	104.8622	2.775	0.048	3.0
