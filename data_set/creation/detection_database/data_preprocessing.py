@@ -1,9 +1,13 @@
 from data_set.creation.detection_database.db_retrieve import DBRetrieval
 from collections import defaultdict
 
+# initialize retrieval object for database connection
 retrieval = DBRetrieval()
 
 def get_info_per_date(date,empath_lex,spacy_en_core):
+    """
+    Main functionality for the analysis.
+    """
 
     posts_of_date = retrieval.get_post_per_day(date)
 
@@ -18,28 +22,24 @@ def get_info_per_date(date,empath_lex,spacy_en_core):
 def topic_signal_mod(posts_of_date,empath_lex):
     """
     Returns the top ten topic for a specific date (time).
-    :param posts_of_date:
-    :param empath_lex:
-    :return:
     """
     date_tokens = []
 
+    # all the tokens of threads and posts are added to the whole date token list
     for thread in posts_of_date:
         date_tokens += thread["initial_comment"]
         for reply in thread["replies"]:
             date_tokens += reply
 
+    # analyze the whole tokens of the date
     date_topics = empath_lex.analyze(date_tokens, normalize=True)
-    date_word_count = len(date_tokens)
 
+    # thresholöd for detected topics
     threshold = 0.001
     if date_topics is not None:
         date_topic_dictionary = {k: v for k,v in date_topics.items() if v >= threshold}
     else:
         return []
-
-    #for topic, value in date_topic_dictionary.items():
-    #    date_topic_dictionary[topic] = (value/date_word_count)*1000000
 
     date_topic_dictionary = {k: v for k, v in sorted(date_topic_dictionary.items(), key=lambda item: item[1], reverse=True)}
     top_ten = list(date_topic_dictionary.items())[2:12]
@@ -47,6 +47,9 @@ def topic_signal_mod(posts_of_date,empath_lex):
     return top_ten
 
 def get_keyword_list():
+    """
+    Reduced keyword list, that's why the csv isn't used.
+    """
     # keyword_list = ["jew", "kike", "zionist", "israel", "shylock", "yid"] old one
 
     kl_jewish = ["jew", "jews", "jewish", "judaism", "david"]
@@ -65,8 +68,6 @@ def get_keyword_list():
 def get_keyword_distr(posts_of_date):
     """
     Returns a dictionary containing the threads with the highest keyword_counts and their distribution.
-    :param posts_of_date:
-    :return:
     """
     keyword_list = get_keyword_list()
 
@@ -109,6 +110,10 @@ def get_keyword_distr(posts_of_date):
     return keyword_distribution
 
 def get_countings(posts_of_date, sp):
+    """
+    Get all the counting information.
+    """
+    # dictionary structure for the countings
     countings = {
         "thread_general": {
             "count": 0,
@@ -122,17 +127,21 @@ def get_countings(posts_of_date, sp):
     }
     all_words = []
 
+    # first counting: post count
     countings["thread_general"]["count"] = len(posts_of_date)
 
     for thread in posts_of_date:
+        # count the total number of replies
         countings["thread_general"]["replies"] += len(thread["replies"])
         all_words += thread["initial_comment"]
         for reply in thread["replies"]:
             all_words += reply
 
+        # save thread IDs with a reply count over 10
         if len(thread["replies"]) > 10:
             countings["special_threads"]["traffic"].append((thread["thread"],len(thread["replies"])))
 
+    # word counts total and without stopwords
     countings["thread_general"]["word_count_total"] = len(all_words)
     countings["thread_general"]["word_count_without_stopwords"] = len(remove_stopwords(sp,all_words))
     return countings
@@ -142,16 +151,10 @@ def remove_stopwords(sp, words):
     tokens_without_sw = [word for word in words if not word in all_stopwords]
     return tokens_without_sw
 
-def get_thread(id):
-    """
-    Get specific thread to visualize
-    :param id:
-    :return:
-    """
-
-    return False
-
 def get_dates(time_interval):
+    """
+    Returns all the dates in the dataset in hourly or daily steps
+    """
     dates = []
     if time_interval == "hourly":
         date_cut_length = 15
@@ -160,6 +163,5 @@ def get_dates(time_interval):
 
     for thread in retrieval.get_db_all():
         dates.append(thread["posting_time"][:date_cut_length])
-
 
     return list(dict.fromkeys(dates))

@@ -2,12 +2,7 @@
 Learn linguistic features of antisemitic language. 
 
 ---
-
-## How-To
-
-This chapter explains how to use the created code.
-
-### Preparing 
+## Preparing the environments.
 
 I recommend using an anaconda environment. The *.yml files make sure that the correct library versions are installed.
 
@@ -18,7 +13,30 @@ conda env create -f ./anaconda_envs/data_analysis_app.yml
 conda env create -f ./anaconda_envs/antisem_detector.yml
 ```
 ---
-### Dataset creation and the Analysis Tool
+
+## How-To Part 1: Main functionalities.
+
+This chapter explains how to use the main functionalities.
+The use of the analysis tool and the training of the model.
+
+### Analysis Tool
+The analysis tool runs as a local web app with flask. Just use your browser of choice to go on the shown local adress after executing the code.
+The start might take a little while because some models need to be initialized.
+
+```
+conda activate data_analysis_app
+cd ./data_set/analysis
+python run_app.py
+```
+
+
+## How-To Part 2: Preparing steps.
+
+This chapter explains the use of the preparing steps to the main functionalities.
+F.ex. the creation of specific datasets that are provided with the git. The use
+is explained nevertheless to ensure the adaption of the code for your own projects.
+
+### Dataset creations
 `conda activate data_analysis_app`
 
 #### Create the initial dataset
@@ -31,13 +49,27 @@ you have to tell the script the last thread ID of the previous list of thread ID
 This happens if you scrape on several days and the list of thread IDs was refreshed by 4chan. 
 The script stops when it reaches the newest thread of your previous scraping.
 
-`python 4chan_scraper.py <Last thread ID of previous list>`
+```
+cd ./data_set/creation/initial_database
+python 4chan_scraper.py <Last thread ID of previous list>
 
+```
 #### Create the database used for the analysis tool
 
-
+```
+cd ./data_set/creation/detection_database
+python analysis_db_creator.py
+```
 
 #### Create a csv of the antisemitic keywords for later reference
+
+The list has been created with the latest keyword list. If you want to change keywords, add them to the dictionary in
+the `keyword_csv.py` file and run the script:
+
+```
+cd ./data_set/creation/create_keyword_csv
+python keyword_csv.py
+```
 
 #### Create the labeled antisemitic subset
 
@@ -132,7 +164,9 @@ antisemitism-detector
 |     |         - the labeled subset (1500: antisem, 1500: not antisem)
 |     |     detections_4chan_pol_database.json
 |     |         - aggregated analysis and insights of the "4chan_pol_database.json" database, used for the analysis app
-|     |     
+|     |     keywords.csv
+|     |         - all the keywords as a csv file for later references.
+|     |  
 |     └──── analysis
 |     |     |   run_app.py
 |     |     |   

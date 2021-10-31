@@ -1,6 +1,9 @@
 import pandas as pd
 
 def get_keywords():
+    """
+    Keyword as dictionary. To filled by hand.
+    """
     return  {
 
         "jewish": ["jew", "jews", "jewish", "judaism", "david","jewed","israeli","israelis","rabbi"],
@@ -18,7 +21,10 @@ def get_keywords():
                              "hollywoodcuckmuzzlei","yidtheatre","nuremberg","sidelock","shekel","shekels"]
     }
 
-def main():
+if __name__ == "__main__":
+    """
+    Create *.csv file from keyword dictionary in order to have a consistent list throughout multiple later uses of the list.
+    """
     keyword_df = pd.DataFrame(columns=["category","keyword"])
 
     for category, keywords in get_keywords().items():
@@ -27,4 +33,4 @@ def main():
 
     keyword_df.to_csv("../../keywords.csv")
 
-main()
+
