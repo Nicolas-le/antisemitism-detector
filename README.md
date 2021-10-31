@@ -29,6 +29,31 @@ cd ./data_set/analysis
 python run_app.py
 ```
 
+### Train the model
+```
+conda activate antisem_detector
+cd ./detector/distil_bert
+```
+
+There are three **training** options. 
+
+**DB-Modell A: Training with all keywords** `python train.py 1`
+
+**DB-Modell B: Training without all keywords** `python train.py 2`
+
+**DB-Modell C: Training without slur/racist keywords** `python train.py 3`
+
+The trained models will be saved into a directory named after the timestamp they were created
+under `./detector/distil_bert/models/`
+
+There are three **test** options. You will get some several metrics, f.ex. accuracy, confusion matrix, precision, recall, f1-score
+
+**Test DB-Modell A** `python test.py 1`
+
+**Test DB-Modell B** `python test.py 2`
+
+**Test DB-Modell C** `python test.py 3`
+
 
 ## How-To Part 2: Preparing steps.
 
@@ -52,7 +77,6 @@ The script stops when it reaches the newest thread of your previous scraping.
 ```
 cd ./data_set/creation/initial_database
 python 4chan_scraper.py <Last thread ID of previous list>
-
 ```
 #### Create the database used for the analysis tool
 

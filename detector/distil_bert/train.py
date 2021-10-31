@@ -3,7 +3,7 @@ import torch
 from torch.utils.data import DataLoader
 import pandas as pd
 from datetime import datetime
-import os
+import os, sys
 
 from utils import create_test_train, tokenize_train_test, date_time_to_string
 from metrics import antisem_metrics
@@ -58,7 +58,7 @@ def training(train_dataset, test_dataset, metric_title,model_directory,number_of
     )
 
     metrics_dataframe = pd.DataFrame(final_metrics)
-    metrics_dataframe.to_csv("./saved_metrics/distil_bert_epochs_"+ str(number_of_epochs) + "_" +metric_title+".csv")
+    metrics_dataframe.to_csv("./saved_metrics/distil_bert_epochs_"+ str(number_of_epochs) + "_" + metric_title +".csv")
 
 def main(train_csv,test_csv, input_information):
     train_texts, test_texts, train_labels, test_labels = create_test_train(train_csv,test_csv)
@@ -73,14 +73,32 @@ def main(train_csv,test_csv, input_information):
 
     training(train_dataset,test_dataset,metric_title,model_directory,number_of_epochs=2)
 
-#input_information = "without_all_keywords"
-#train_csv, test_csv = "../data_without_all_keywords_train.csv", "../data_without_all_keywords_test.csv"
-#main(train_csv, test_csv, input_information)
+def command_line_and_start():
+    fail_line = "\nWrong or no Input. You have to chose a dataset. Exiting...\n"
+    try:
+        decision = int(sys.argv[1])
+        if decision == 1:
+            input_information = "with_keywords"
+            train_csv, test_csv = "../data_train.csv", "../data_test.csv"
+            main(train_csv, test_csv, input_information)
+        elif decision == 2:
+            input_information = "without_all_keywords"
+            train_csv, test_csv = "../data_without_all_keywords_train.csv", "../data_without_all_keywords_test.csv"
+            main(train_csv, test_csv, input_information)
+        elif decision == 3:
+            input_information = "without_slur_keywords"
+            train_csv, test_csv = "../data_without_slur_keywords_train.csv", "../data_without_slur_keywords_test.csv"
+            main(train_csv, test_csv, input_information)
+        else:
+            print(fail_line)
+            sys.exit()
+    except IndexError:
+        print(fail_line)
+        sys.exit()
+    except ValueError:
+        print(fail_line)
+        sys.exit()
 
-#input_information = "without_slur_keywords"
-#train_csv, test_csv = "../data_without_slur_keywords_train.csv", "../data_without_slur_keywords_test.csv"
-#main(train_csv, test_csv, input_information)
+if __name__ == "__main__":
+    command_line_and_start()
 
-input_information = "with_keywords"
-train_csv, test_csv = "../data_train.csv", "../data_test.csv"
-main(train_csv, test_csv, input_information)
