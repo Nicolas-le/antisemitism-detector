@@ -71,7 +71,7 @@ def main(train_csv,test_csv, input_information):
     os.mkdir(model_directory)
     metric_title = input_information + "_" + date_time_to_string(datetime.now())
 
-    training(train_dataset,test_dataset,metric_title,model_directory)
+    training(train_dataset,test_dataset,metric_title,model_directory,number_of_epochs=2)
 
 #input_information = "without_all_keywords"
 #train_csv, test_csv = "../data_without_all_keywords_train.csv", "../data_without_all_keywords_test.csv"

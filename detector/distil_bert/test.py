@@ -50,7 +50,7 @@ def write_false_pos(df_test_with_predicted):
 
 if __name__ == "__main__":
     #model_path = "./models/without_slur_keywords/04_10_2021_20_20_23"
-    model_path = "./models/with_keywords/05_10_2021_10_46_14"
+    model_path = "./models/with_keywords/20_10_2021_17_52_36"
     #model_path = "./models/without_all_keywords/04_10_2021_16_25_23"
     antisem_classifier = classifier(model_path)
 
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     y_pred = test["predicted"]
     y_true = test["label"]
 
-    write_false_pos(test)
+    #write_false_pos(test)
 
     metrics = get_metrics(y_true,y_pred)
     print(metrics)
