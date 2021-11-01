@@ -55,8 +55,9 @@ def main(video_list_title):
     with open("./resources/collected_comments_"+video_list_title+".json", 'w') as file:
         json.dump(all_video_dict , file)
 
-#main("corey_israel")
-#main("corey_palestinian")
+
+main("corey_israel")
+main("corey_palestinian")
 main("corey_whole")
 
 

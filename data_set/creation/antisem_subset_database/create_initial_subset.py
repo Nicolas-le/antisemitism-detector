@@ -1,7 +1,6 @@
 from db_retrieve import DBRetrieval
 from utils import create_keywords
 
-
 def create_initial_subset():
     ID = 0
     retrieval =DBRetrieval(original_and_restuctured=True)
@@ -62,4 +61,5 @@ def create_non_kw_subset():
 
     retrieval.initial_subset.close()
 
+create_initial_subset()
 create_non_kw_subset()

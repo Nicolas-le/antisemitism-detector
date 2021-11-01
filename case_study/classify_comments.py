@@ -36,10 +36,6 @@ def classify_and_count(classifier, json_file):
             if classification["label"] == "LABEL_1" and classification["score"] >= 0.9:
                 antisem_counter += 1
 
-                if value["title"] == "Israelis: Is international media biased against Israel?":
-                    print(comment)
-                    print(classification)
-
             elif classification["label"] == "LABEL_1" and classification["score"] < 0.9:
                 prob_antisem_counter += 1
             elif classification["label"] == "LABEL_1" and classification["score"] < 0.80:
@@ -77,13 +73,14 @@ def calculate_mean(video_dict):
     print("Mean antisem: {}; Mean not antisem: {}".format(mean_antisem,mean_not_antisem))
 
 
-def main():
+def main(plotting):
     classifier = get_classifier("./resources/distilbert_model")
+
+    # change the path for other input files
     json_file = get_json("./resources/collected_comments_corey_whole.json")
     final_dictionary = classify_and_count(classifier, json_file)
 
-    #plot_antisem_proportions(final_dictionary)
+    if plotting:
+        plot_antisem_proportions(final_dictionary)
 
     calculate_mean(final_dictionary)
-
-main()

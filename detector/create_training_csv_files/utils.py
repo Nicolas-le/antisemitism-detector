@@ -1,5 +1,3 @@
-
-
 def delete_keywords(comment, keyword_list):
     comment = [word for word in comment if not word in keyword_list]
     return comment

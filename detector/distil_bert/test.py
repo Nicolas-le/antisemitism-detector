@@ -56,15 +56,15 @@ def command_line_and_start():
     try:
         decision = int(sys.argv[1])
         if decision == 1:
-            model_path = "./models/with_keywords/20_10_2021_17_52_36"
+            model_path = "./models/with_keywords/DB_Modell_A"
             title = "Mit Schlüsselworten"
             matrix_path = "./saved_metrics/confusion_matrix_with_keywords.png"
         elif decision == 2:
-            model_path = "./models/without_all_keywords/04_10_2021_16_25_23"
+            model_path = "./models/without_all_keywords/DB_Modell_B"
             title = "Ohne Schlüsselworte"
             matrix_path = "./saved_metrics/confusion_matrix_without_all_keywords.png"
         elif decision == 3:
-            model_path = "./models/without_slur_keywords/04_10_2021_20_20_23"
+            model_path = "./models/without_slur_keywords/DB_Modell_C"
             title = "Ohne Slur-Schlüsselworte"
             matrix_path = "./saved_metrics/confusion_matrix_without_slur_keywords.png"
         else:

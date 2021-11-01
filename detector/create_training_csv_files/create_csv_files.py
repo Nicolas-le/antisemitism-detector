@@ -1,6 +1,7 @@
 from tinydb import TinyDB
 from sklearn.model_selection import train_test_split
 import pandas as pd
+import os
 
 from post import Post
 from utils import get_slur_keywords, get_all_keywords, delete_keywords
@@ -36,7 +37,12 @@ def skip_unsure_labels(label):
 
 
 def main():
-    database = TinyDB('../../data_set/antisemitic_subset.json')
+    data_base_path = "../../data_set/antisemitic_subset.json"
+    if os.path.isfile(data_base_path):
+        database = TinyDB(data_base_path)
+    else:
+        print("There antisemitic subset database hasn't been found")
+
 
     create_test_train_sets("../data_", database)
     create_test_train_sets("../data_without_all_keywords_", database, deletion=True,keyword_list=get_all_keywords())

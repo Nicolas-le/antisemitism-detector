@@ -28,6 +28,7 @@ def create_word_occ_dict(unique_word_list, word_list):
 
     for word in unique_word_list:
         n_word_given_word_list = word_list.count(word)
+        # implemented laplace smoothing of 1
         p_word_given_word_list = (n_word_given_word_list + smoothing) / \
                                  (word_list_length + smoothing * unique_list_length)
 
