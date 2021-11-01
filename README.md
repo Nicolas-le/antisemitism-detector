@@ -4,7 +4,7 @@ This is the repository to my bachelors thesis. The code addresses different appr
 ---
 ## Preparing the environments.
 
-I recommend using anaconda environment.s The *.yml files make sure that the correct library versions are installed.
+I recommend using anaconda environments. The *.yml files make sure that the correct library versions are installed.
 
 ```
 git clone https://github.com/Nicolas-le/antisemitism-detector.git
@@ -15,7 +15,7 @@ conda env create -f ./anaconda_envs/case_study.yml
 ```
 ---
 
-## How-To Part 1: Main functionalities.
+## How-To, Part 1: Main functionalities.
 
 This chapter explains how to use the main functionalities.
 The use of the analysis tool and the training of the model.
@@ -24,11 +24,13 @@ The use of the analysis tool and the training of the model.
 The analysis tool runs as a local web app with flask. Just use your browser of choice to go on the shown local address after executing the code.
 The start might take a little while because some models need to be initialized.
 
-Copy the models into the corresponding directories. The models are only provided once for data size reasons and they are
+Copy the DistilBERT models into the corresponding directories. The models are only provided once for data size reasons and they are
 tracked through git large file storage. **To get an overview over the structure you can look below under project structure.**
 
 `./detector/distil_bert/models/with_keywords/DB_Modell_A/*` to `./data_set/analysis/App/classifier_models/trained_with_kws/`
+
 `./detector/distil_bert/models/without_all_keywords/DB_Modell_B/*` to `./data_set/analysis/App/classifier_models/trained_without_all_kws/`
+
 `./detector/distil_bert/models/without_slur_keywords/DB_Modell_C/*` to `./data_set/analysis/App/classifier_models/trained_without_slur_kws/`
 
 ```
@@ -65,7 +67,7 @@ There are three **training** options.
 The trained models will be saved into a directory named after the timestamp they were created
 under `./detector/distil_bert/models/`
 
-There are three **test** options. You will get some several metrics, f.ex. accuracy, confusion matrix, precision, recall, f1-score
+There are three **test** options. You will get several metrics, f.ex. accuracy, confusion matrix, precision, recall, f1-score
 
 **Test DB-Modell A** `python test.py 1`
 
@@ -86,7 +88,7 @@ is explained nevertheless to ensure the adaption of the code for your own projec
 #### Create the initial dataset
 
 You have to get a list of thread IDs that are currently available by the 4chan-API Archive. This list gets updated by 4chan and
-new threads are added to the end. You can get the JSON file here: `https://a.4cdn.org/pol/archive.json`. 
+new threads are added to the end. You can get the JSON file here: https://a.4cdn.org/pol/archive.json. 
 You save the file as `./data_set/creation/initial_database/pol_archive_thread_IDs.json`! The thread IDs are necessary because this is the only
 way to access a specific thread. Because this is the only possibility and the script shouldn't save the same posts twice
 you have to tell the script the last thread ID of the previous list of thread IDs you scraped. 
@@ -232,7 +234,7 @@ antisemitism-detector
 |     |     |     |     config.json
 |     |     |     |     pytorch_model.bin
 |     |     |     |     training_args.bin
-|     |     |     |
+|    
 |         
 └──── data_set
 |     |     4chan_pol_database.json
