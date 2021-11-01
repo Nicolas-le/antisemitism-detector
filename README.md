@@ -24,6 +24,13 @@ The use of the analysis tool and the training of the model.
 The analysis tool runs as a local web app with flask. Just use your browser of choice to go on the shown local address after executing the code.
 The start might take a little while because some models need to be initialized.
 
+Copy the models into the corresponding directories. The models are only provided once for data size reasons and they are
+tracked through git large file storage. **To get an overview over the structure you can look below under project structure.**
+
+`./detector/distil_bert/models/with_keywords/DB_Modell_A/*` to `./data_set/analysis/App/classifier_models/trained_with_kws/`
+`./detector/distil_bert/models/without_all_keywords/DB_Modell_B/*` to `./data_set/analysis/App/classifier_models/trained_without_all_kws/`
+`./detector/distil_bert/models/without_slur_keywords/DB_Modell_C/*` to `./data_set/analysis/App/classifier_models/trained_without_slur_kws/`
+
 ```
 conda activate data_analysis_app
 cd ./data_set/analysis
@@ -183,7 +190,7 @@ optional arguments:
 ```
 
 ---
-## File Structure
+## Project Structure
 
 The following tree shows the structure of the whole project. This documentation should help fix errors if there are
 problems regarding the git, the path structures or missing files.
@@ -341,14 +348,38 @@ antisemitism-detector
 |     |     |       utils.py
 |     |     |
 |     |     └──── models
-|     |     |     |     - this directory contains various trained models, only the Models from thesis are provided
+|     |     |     |     - this directory normally contains various trained models, only the models from thesis are provided
 |     |     |     └──── with_keywords
-|     |     |     |     └──── 05_10_2021_10_46_14      
+|     |     |     |     └──── DB_Modell_A     
+|     |     |     |     |     |     config.json
+|     |     |     |     |     |     pytorch_model.bin
+|     |     |     |     |     |     training_args.bin
+|     |     |     |
+|     |     |     └──── without_all_keywords
+|     |     |     |     └──── DB_Modell_B    
+|     |     |     |     |     |     config.json
+|     |     |     |     |     |     pytorch_model.bin
+|     |     |     |     |     |     training_args.bin
+|     |     |     |
+|     |     |     └──── without_slur_keywords
+|     |     |     |     └──── DB_Modell_C   
 |     |     |     |     |     |     config.json
 |     |     |     |     |     |     pytorch_model.bin
 |     |     |     |     |     |     training_args.bin
 ...
 |     |     └──── saved_metrics
-|     |     |     |
-|     |     |     |
+|     |     |     |     confusion_matrix.py
+|     |     |     |         - a script provided by : https://github.com/DTrimarchi10 to style a confusion matrix
+|     |     |     |     confusion_matrix_with_keywords.png   
+|     |     |     |     confusion_matrix_without_all_keywords.png
+|     |     |     |     confusion_matrix_without_slur_keywords.png
+|     |     |     |     false_pos_trained_with_kws.csv
+|     |     |     |     false_pos_trained_without_slurs.csv
+|     |
+|     └──── keyword_approach
+|     |     |       keyword_classifer.py
+|     |     |       keywords.csv
+|     |
+|     └──── naive_bayes
+|     |     |       naive_bayes.py
 ```
