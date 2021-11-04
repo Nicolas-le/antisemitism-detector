@@ -17,6 +17,11 @@ text-transform: uppercase;
 th{
   background-color: #04AA6D;
   color: white;
+  font-size: 22px;
+
+}
+td{
+  font-size: 18px;
 
 }
 
