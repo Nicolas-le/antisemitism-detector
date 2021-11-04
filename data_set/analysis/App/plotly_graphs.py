@@ -9,7 +9,9 @@ class Plotting():
         self.time_interval = time_interval
         self.extracted_information = self.get_info_dict()
         #self.plot_layout = go.Layout(autosize=False, width=800, height=500)
-        self.plot_layout = go.Layout()
+        self.plot_layout = go.Layout(font=dict(
+                                        size=17,
+                                    ))
         self.topic_plot = self.create_topic_plot()
         self.counting_plots = self.create_counting_plots()
         self.keyword_distr_plots = self.create_keyword_distr_plot()
