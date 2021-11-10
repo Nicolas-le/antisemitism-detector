@@ -1,0 +1,13 @@
+name: antisem_detector
+dependencies:
+  - python=3.9.5
+  - pip=21.0.1
+  - pip:
+    - pandas
+    - tinydb
+    - scikit-learn
+    - transformers
+    - numpy
+    - torch
+    - datetime
+    - nltk
