@@ -4,9 +4,9 @@ This is the repository to my bachelors thesis. The code addresses different appr
 ---
 ## Preparing the environments and models.
 
-I recommend using anaconda environments. The *.yml files make sure that the correct library versions are installed.
-You need to install **Git Large File Storage** to get the models. -> How-To: `https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage`
-
+1. I recommend using anaconda environments. The *.yml files make sure that the correct library versions are installed.
+2. You need to install **Git Large File Storage** to get the models. -> How-To: `https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage`
+3. Execute the code below!
 ```
 git clone https://github.com/Nicolas-le/antisemitism-detector.git
 cd antisemitism-detector/
@@ -16,6 +16,9 @@ conda env create -f ./anaconda_envs/data_analysis_app.yml
 conda env create -f ./anaconda_envs/antisem_detector.yml
 conda env create -f ./anaconda_envs/case_study.yml
 ```
+
+4. If you start the `data_analysis_app` env the first time, you have to install a related spacy package once: `python -m spacy download en_core_web_sm`
+
 ---
 
 ## How-To, Part 1: Main functionalities.
@@ -35,8 +38,6 @@ tracked through git large file storage. **To get an overview over the structure 
 `./detector/distil_bert/models/without_all_keywords/DB_Modell_B/*` to `./data_set/analysis/App/classifier_models/trained_without_all_kws/`
 
 `./detector/distil_bert/models/without_slur_keywords/DB_Modell_C/*` to `./data_set/analysis/App/classifier_models/trained_without_slur_kws/`
-
-If you started the data_analysis_app env the first time, you have to install a related spacy package once: `python -m spacy download en_core_web_sm`
 
 ```
 conda activate data_analysis_app
