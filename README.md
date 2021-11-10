@@ -36,6 +36,8 @@ tracked through git large file storage. **To get an overview over the structure 
 
 `./detector/distil_bert/models/without_slur_keywords/DB_Modell_C/*` to `./data_set/analysis/App/classifier_models/trained_without_slur_kws/`
 
+If you started the data_analysis_app env the first time, you have to install a related spacy package once: `python -m spacy download en_core_web_sm`
+
 ```
 conda activate data_analysis_app
 cd ./data_set/analysis
