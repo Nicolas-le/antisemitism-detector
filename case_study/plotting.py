@@ -1,7 +1,7 @@
 import plotly.graph_objects as go
 
 def plot_antisem_proportions(video_dict):
-    plot_layout = go.Layout(width=1920, height=1080, font=dict(size=17))
+    plot_layout = go.Layout(width=1920, height=1080)
 
 
     data = []
@@ -26,7 +26,7 @@ def plot_antisem_proportions(video_dict):
 
     fig = go.Figure(data=data, layout=plot_layout)
     fig.update_layout(barmode='stack',font=dict(
-        size=17
+        size=22
     ))
     fig.update_xaxes(title_text="video_ids")
     fig.update_yaxes(title_text="counts")
