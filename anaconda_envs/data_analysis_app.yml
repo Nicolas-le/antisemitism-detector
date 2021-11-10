@@ -13,7 +13,5 @@ dependencies:
     - nltk
     - flask
     - plotly
-    - json
-    - csv
     - spacy
     - empath

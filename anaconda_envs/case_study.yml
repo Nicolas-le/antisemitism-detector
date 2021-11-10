@@ -11,6 +11,4 @@ dependencies:
     - torch
     - datetime
     - nltk
-    - json
     - plotly
-    - csv
