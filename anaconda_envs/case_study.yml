@@ -1,4 +1,4 @@
-name: antisem_detector
+name: case_study
 dependencies:
   - python=3.9.5
   - pip=21.0.1
