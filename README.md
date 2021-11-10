@@ -2,13 +2,16 @@
 This is the repository to my bachelors thesis. The code addresses different approaches described in my thesis.
 
 ---
-## Preparing the environments.
+## Preparing the environments and models.
 
 I recommend using anaconda environments. The *.yml files make sure that the correct library versions are installed.
+You need to install **Git Large File Storage** to get the models. -> How-To: `https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage`
 
 ```
 git clone https://github.com/Nicolas-le/antisemitism-detector.git
 cd antisemitism-detector/
+git lfs install
+git lfs pull
 conda env create -f ./anaconda_envs/data_analysis_app.yml
 conda env create -f ./anaconda_envs/antisem_detector.yml
 conda env create -f ./anaconda_envs/case_study.yml
